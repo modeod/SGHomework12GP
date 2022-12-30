@@ -11,9 +11,9 @@ namespace ShopApp.Entities.OrderItemEntity
         public decimal PriceWithSale { get; set; }
 
         public int OrderId { get; set; }
-        public Order Order { get; set; }
+        public Order Order { get; set; } = null!;
 
         public int ProductVendorCode { get; set; }
-        public Product Product { get; set; }
+        public Product Product { get; set; } = null!;
     }
 }

@@ -23,6 +23,6 @@ namespace ShopApp
 
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Favourite> Favourites { get; set; }
-        public DbSet<Manufacture> Manufactures { get; set; }
+        public DbSet<Manufacter> Manufactures { get; set; }
     }
 }

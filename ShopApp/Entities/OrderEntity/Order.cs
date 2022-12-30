@@ -20,6 +20,6 @@ namespace ShopApp.Entities.OrderEntity
         public int AddressId { get; set; }
         public Address Address { get; set; } = null!;
 
-        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>
+        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }

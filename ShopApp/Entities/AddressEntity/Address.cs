@@ -16,6 +16,6 @@ namespace ShopApp.Entities.AddressEntity
 
         public List<User> Users { get; set; } = new List<User>();
         public List<Order> Orders { get; set; } = new List<Order>();
-        public List<Manufacture> Manufacters { get; set; } = new List<Manufacture>();
+        public List<Manufacter> Manufacters { get; set; } = new List<Manufacter>();
     }
 }

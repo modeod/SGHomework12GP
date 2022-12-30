@@ -29,6 +29,21 @@ namespace ShopApp.Entities.AddressEntity
             builder
                 .Property(x => x.House)
                 .IsRequired();
+
+            builder
+                .HasMany(x => x.Users)
+                .WithOne(x => x.Address)
+                .HasForeignKey(x => x.AddressId);
+
+            builder
+                .HasMany(x => x.Orders)
+                .WithOne(x => x.Address)
+                .HasForeignKey(x => x.AddressId);
+
+            builder
+                .HasMany(x => x.Manufacters)
+                .WithOne(x => x.Address)
+                .HasForeignKey(x => x.AddressId);
         }
     }
 }

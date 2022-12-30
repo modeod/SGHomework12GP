@@ -9,6 +9,19 @@ namespace ShopApp.Entities.FavouriteEntity
         {
             builder
                 .HasKey(x => new { x.UserId, x.ProductVendorCode });
+
+            builder
+                .Property(x => x.UserId)
+                .IsRequired();
+
+            builder
+                .Property(x => x.ProductVendorCode)
+                .IsRequired();
+
+            builder
+                .HasOne(x => x.Product)
+                .WithMany(x => x.Favourites)
+                .HasForeignKey(x => x.ProductVendorCode);
         }
     }
 }
