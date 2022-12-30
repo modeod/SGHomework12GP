@@ -29,8 +29,8 @@ namespace ShopApp.Entities.OrderItemEntity
             builder
                 .HasOne(x => x.Product)
                 .WithMany(x => x.OrderItems)
-                .HasForeignKey(x => x.ProductVendorCode);
-
+                .HasForeignKey(x => x.ProductVendorCode)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
