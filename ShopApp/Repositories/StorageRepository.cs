@@ -16,31 +16,31 @@ namespace ShopApp.Repositories
         {
             _dbContext = context;
         }
-        public async Task<bool> CreateProduct(Product product)
+        public async Task<Product> CreateProduct(Product product)
         {
             try
             {
                 await _dbContext.Products.AddAsync(product);
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return _dbContext.Products.First(p => p.VendorCode == product.VendorCode);
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t create product");
             }
         }
 
-        public async Task<bool> DeleteProduct(Product product)
+        public async Task<Product> DeleteProduct(Product product)
         {
             try
             {
                 _dbContext.Products.Remove(product);
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return product;
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t delete order");
             }
         }
 
@@ -54,17 +54,17 @@ namespace ShopApp.Repositories
             return await _dbContext.Products.ToListAsync();
         }
 
-        public async Task<bool> UpdateProduct(Product product)
+        public async Task<Product> UpdateProduct(Product product)
         {
             try
             {
                 _dbContext.Entry(product).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return _dbContext.Products.First(p => p.VendorCode == p.VendorCode);
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t update order");
             }
         }
     }

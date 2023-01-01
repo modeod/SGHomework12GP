@@ -11,7 +11,7 @@ namespace ShopApp.Repositories.Interfaces
     {
         Task<List<Order>> GetAll();
         Task<Order?> GetById(int id);
-        Task<bool> CreateOrder(Order order);
-        Task<bool> UpdateOrder(Order order);
+        Task<Order> CreateOrder(Order order);
+        Task<Order> UpdateOrder(Order order);
     }
 }

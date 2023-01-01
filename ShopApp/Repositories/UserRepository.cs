@@ -15,31 +15,31 @@ namespace ShopApp.Repositories
         {
             _shopDbContext = context;
         }
-        public async Task<bool> AddUser(User user)
+        public async Task<User> AddUser(User user)
         {
             try
             {
                 await _shopDbContext.Users.AddAsync(user);
                 await _shopDbContext.SaveChangesAsync();
-                return true;
+                return _shopDbContext.Users.First(u => u.Id == user.Id);
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t add user");
             }
         }
 
-        public async Task<bool> Delete(User user)
+        public async Task<User> Delete(User user)
         {
             try
             {
                 _shopDbContext.Users.Remove(user);
                 await _shopDbContext.SaveChangesAsync();
-                return true;
+                return user;
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t delete user");
             }
         }
 
@@ -53,17 +53,17 @@ namespace ShopApp.Repositories
             return await _shopDbContext.Users.FindAsync(id);
         }
 
-        public async Task<bool> Update(User user)
+        public async Task<User> Update(User user)
         {
             try
             {
                 _shopDbContext.Entry(user).State = EntityState.Modified;
                 await _shopDbContext.SaveChangesAsync();
-                return true;
+                return _shopDbContext.Users.First(u => u.Id == user.Id);
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t update user");
             }
         }
     }
