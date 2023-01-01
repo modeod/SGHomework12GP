@@ -1,0 +1,14 @@
+﻿using ShopApp.Entities.OrderEntity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ShopApp.Repositories.Interfaces
+{
+    internal interface ICRUDOrders : IUserOrder
+    {
+        Task<bool> DeleteOrder(Order order);
+    }
+}
