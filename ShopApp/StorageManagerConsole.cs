@@ -136,7 +136,36 @@ namespace ShopApp
 
         public void ReadProduct()
         {
-            throw new NotImplementedException();
+            List<Product> listProduct = new List<Product>();
+
+            try
+            {
+                listProduct = storageCRUD.ReadProducts().Result;
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine("Операція читання аварійно зупинена " + ex.Message);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine("Аргумент має NULL значення " + ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine("Помилка читання репозиторія " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Помилка читання" + ex.Message);
+            }
+
+            if (listProduct.Count > 0)
+            {
+                foreach (Product product in listProduct)
+                {
+                    Console.WriteLine(product);
+                }
+            }
         }
         public void UpdateProduct()
         {
