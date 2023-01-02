@@ -18,10 +18,6 @@ namespace ShopApp.UI
         private IProxyPay payment;
 
         public Order CurrentOrder { get; set; }
-        public UserConsole()
-        {
-
-        }
 
         public UserConsole(IReadStorage storage, IUserOrder orderService, IProxyPay payment, Order currentOrder)
         {
@@ -131,9 +127,7 @@ namespace ShopApp.UI
             }
             return product;
         }
-
-
-
+       
         private void ShowProduct(Product product)
         {
             Console.WriteLine($"{product.Name}:\nОпис: {product.Description}");
