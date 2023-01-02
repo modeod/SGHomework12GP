@@ -15,7 +15,7 @@ namespace GroupProject.factory
             var product = base.CreateProduct();
             var description = GetDescription();
 
-            return new NonFoodProductDTO(0, product.Name, DTO.Enums.ProdType.Vehicle, product.Price, product.Amount, product.WeightUnit, product.Weight, product.Currency, description);
+            return new NonFoodProductDTO(0, product.Name, DTO.Enums.ProdType.NonFoodProduct, product.Price, product.Amount, product.WeightUnit, product.Weight, product.Currency, description);
         }
         public static string GetDescription()
         {

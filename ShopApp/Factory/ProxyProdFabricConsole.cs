@@ -23,7 +23,7 @@ namespace ShopApp.Factory
             uint res;
             do
             {
-                Console.WriteLine("Product Type (1 - Food, 2 - Meat, 3 - Vehicle): ");
+                Console.WriteLine("Product Type (1 - Food, 2 - Meat, 3 - NonFoodProduct): ");
                 string input = Console.ReadLine();
                 if (!uint.TryParse(input, out res)) { continue; }
             }
