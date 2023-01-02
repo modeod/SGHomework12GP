@@ -23,21 +23,24 @@ namespace ShopApp.PaymentService
         {
             Console.WriteLine("1 - Платити готівкою");
             Console.WriteLine("2 - Платити карткою");
+
             int menuCount;
             do
             {
+                Console.WriteLine("Введіть ваш вибір: ");
                 if (!int.TryParse(Console.ReadLine(), out menuCount))
                 {
                     Console.WriteLine("Потрібно ввести хоть якесь число!");
-                    menuCount = -1;
+                    continue;
                 }
                 else 
-                if (menuCount < 1  && menuCount > 2)
+                if (menuCount < 1  || menuCount > 2)
                 {
                     Console.WriteLine("Введіть дані числа меню!");
                 }
             } 
-            while (menuCount < 1 && menuCount > 2);
+            while (menuCount < 1 || menuCount > 2);
+
             switch (menuCount)
             {
                 case 1:
