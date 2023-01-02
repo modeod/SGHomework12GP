@@ -207,7 +207,7 @@ namespace ShopApp
             {
                 foreach (Product product in listProduct)
                 {
-                    Console.WriteLine(product);
+                    Console.WriteLine(product.ToString());
                 }
             }
         }
@@ -298,8 +298,26 @@ namespace ShopApp
             }
             else
             {
-                Console.WriteLine(findProduct);
+                Console.WriteLine(findProduct.ToString());
             }
+        }
+
+        static private string ToString(this Product product)
+        {
+            string result = "";
+            result += product.VendorCode+" | ";
+            result += product.ProdType + " | ";
+            result += product.Name + " | ";
+            result += product.Description!=null? product.Description + " | " : "";
+            result += product.Amount + " | ";
+            result += product.WeightUnit + " | ";
+            result += product.Weight.ToString() + " | ";
+            result += product.Weight + " | ";
+            result += product.MeatSort != null ? product.MeatSort.ToString() + " | " : "";
+            result += product.MeatType != null ? product.MeatType.ToString() + " | " : "";
+            result += product.ExpiryDate != null ? product.ExpiryDate.ToString() + " | " : "";
+            result += product.Currency + " | ";
+            return result;
         }
     }
 }
