@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShopApp;
 
@@ -11,9 +12,10 @@ using ShopApp;
 namespace ShopApp.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    partial class ShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230102144700_AddProductFields")]
+    partial class AddProductFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,6 +72,34 @@ namespace ShopApp.Migrations
                     b.HasIndex("ProductVendorCode");
 
                     b.ToTable("Favourites");
+                });
+
+            modelBuilder.Entity("ShopApp.Entities.ManufactureEntity.Manufacter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.ToTable("Manufactures");
                 });
 
             modelBuilder.Entity("ShopApp.Entities.OrderEntity.Order", b =>
@@ -172,6 +202,10 @@ namespace ShopApp.Migrations
                     b.Property<DateTime?>("ExpiryDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ManufacterId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<int?>("MeatSort")
                         .HasColumnType("int");
 
@@ -195,6 +229,8 @@ namespace ShopApp.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("VendorCode");
+
+                    b.HasIndex("ManufacterId");
 
                     b.ToTable("Products");
                 });
@@ -273,6 +309,17 @@ namespace ShopApp.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ShopApp.Entities.ManufactureEntity.Manufacter", b =>
+                {
+                    b.HasOne("ShopApp.Entities.AddressEntity.Address", "Address")
+                        .WithMany("Manufacters")
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+                });
+
             modelBuilder.Entity("ShopApp.Entities.OrderEntity.Order", b =>
                 {
                     b.HasOne("ShopApp.Entities.AddressEntity.Address", "Address")
@@ -319,6 +366,17 @@ namespace ShopApp.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ShopApp.Entities.ProductEntity.Product", b =>
+                {
+                    b.HasOne("ShopApp.Entities.ManufactureEntity.Manufacter", "Manufacter")
+                        .WithMany("Products")
+                        .HasForeignKey("ManufacterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Manufacter");
+                });
+
             modelBuilder.Entity("ShopApp.Entities.UserEntity.User", b =>
                 {
                     b.HasOne("ShopApp.Entities.AddressEntity.Address", "Address")
@@ -340,9 +398,16 @@ namespace ShopApp.Migrations
 
             modelBuilder.Entity("ShopApp.Entities.AddressEntity.Address", b =>
                 {
+                    b.Navigation("Manufacters");
+
                     b.Navigation("Orders");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("ShopApp.Entities.ManufactureEntity.Manufacter", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("ShopApp.Entities.OrderEntity.Order", b =>

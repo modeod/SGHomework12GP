@@ -39,11 +39,6 @@ namespace ShopApp.Entities.AddressEntity
                 .HasMany(x => x.Orders)
                 .WithOne(x => x.Address)
                 .HasForeignKey(x => x.AddressId);
-
-            builder
-                .HasMany(x => x.Manufacters)
-                .WithOne(x => x.Address)
-                .HasForeignKey(x => x.AddressId);
         }
     }
 }

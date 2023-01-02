@@ -1,5 +1,4 @@
-﻿using ShopApp.Entities.ManufactureEntity;
-using ShopApp.Entities.OrderEntity;
+﻿using ShopApp.Entities.OrderEntity;
 using ShopApp.Entities.UserEntity;
 
 namespace ShopApp.Entities.AddressEntity
@@ -16,6 +15,5 @@ namespace ShopApp.Entities.AddressEntity
 
         public List<User> Users { get; set; } = new List<User>();
         public List<Order> Orders { get; set; } = new List<Order>();
-        public List<Manufacter> Manufacters { get; set; } = new List<Manufacter>();
     }
 }
