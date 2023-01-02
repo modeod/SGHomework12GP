@@ -20,7 +20,7 @@ namespace GroupProject.factory
         }
 
 
-        public static DateOnly GetExpiryDate()
+        private DateOnly GetExpiryDate()
         {
             try
             {

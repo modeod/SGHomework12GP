@@ -24,7 +24,7 @@ namespace GroupProject.factory
             return new ProductDTO(name, productType, price, amount, weightUnit, weight, currency);
         }
 
-        public static string GetName()
+        private string GetName()
         {
             Console.WriteLine("Enter product name: ");
             string res = Console.ReadLine();
@@ -32,7 +32,7 @@ namespace GroupProject.factory
             return GetName();
         }
 
-        public static decimal GetPrice()
+        private decimal GetPrice()
         {
             try
             {
@@ -57,7 +57,7 @@ namespace GroupProject.factory
             }
         }
 
-        public static double GetWeight()
+        private double GetWeight()
         {
             try
             {
@@ -82,7 +82,7 @@ namespace GroupProject.factory
             }
         }
 
-        public static uint GetProductAmount()
+        private uint GetProductAmount()
         {
             try
             {
@@ -102,7 +102,7 @@ namespace GroupProject.factory
             }
         }
 
-        public static Weight GetWeightUnits()
+        private Weight GetWeightUnits()
         {
             try
             {
@@ -128,7 +128,7 @@ namespace GroupProject.factory
             }
         }
 
-        public static Currency GetCurrency()
+        private Currency GetCurrency()
         {
             try
             {
@@ -154,7 +154,7 @@ namespace GroupProject.factory
             }
         }
 
-        public static ProdType GetProductType()
+        private ProdType GetProductType()
         {
             try
             {

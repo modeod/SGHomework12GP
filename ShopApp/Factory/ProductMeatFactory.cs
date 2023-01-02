@@ -21,7 +21,7 @@ namespace GroupProject.factory
         }
 
 
-        public static MeatType GetMeatType()
+        private MeatType GetMeatType()
         {
             try
             {
@@ -47,7 +47,7 @@ namespace GroupProject.factory
             }
         }
 
-        public static MeatSort GetMeatSort()
+        private MeatSort GetMeatSort()
         {
             try
             {
