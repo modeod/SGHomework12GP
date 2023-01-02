@@ -146,19 +146,18 @@ namespace ShopApp
                 Console.WriteLine("Введіть код продукта: ");
                 if (int.TryParse(Console.ReadLine(), out indexProduct))
                 {
+                    if (indexProduct < 0) return;
                     break;
                 }
                 else
                     Console.WriteLine("Потрібно ввести хоть якесь число!");
             }
-            while (indexProduct != -1);
+            while (true);
 
             try
             {
-                if (storageCRUD.DeleteProduct(indexProduct).Result != null)
-                {
-                    Console.WriteLine("Продукт видалений");
-                }
+                storageCRUD.DeleteProduct(indexProduct);
+                Console.WriteLine("Продукт видалений");
             }
             catch (OperationCanceledException ex)
             {
@@ -214,19 +213,24 @@ namespace ShopApp
         public void UpdateProduct()
         {
             Product generalProduct;
-            Console.WriteLine("Щоб відмінити оновлення введіть мінусове число");
+            Console.WriteLine("Щоб відмінити видалення введіть мінусове число");
             int indexProduct;
             do
             {
                 Console.WriteLine("Введіть код продукта: ");
                 if (int.TryParse(Console.ReadLine(), out indexProduct))
                 {
+                    if (indexProduct < 0) return;
                     break;
                 }
                 else
                     Console.WriteLine("Потрібно ввести хоть якесь число!");
+                if (storageCRUD.FindProductsById(indexProduct) == null)
+                {
+                    Console.WriteLine("Продукта з таким індексом не існує");
+                }
             }
-            while (indexProduct != -1);
+            while (true);
 
             Type typeProduct = prodFabric.ChooseProductType();
             ProductDTO newProductDTO = prodFabric.CreateProduct();
@@ -285,13 +289,15 @@ namespace ShopApp
                 Console.WriteLine("Введіть код продукта: ");
                 if (int.TryParse(Console.ReadLine(), out indexProduct))
                 {
+                    if (indexProduct < 0) return;
                     break;
                 }
                 else
                     Console.WriteLine("Потрібно ввести хоть якесь число!");
             }
-            while (indexProduct != -1);
-            Product findProduct = storageCRUD.FindProductsById(indexProduct).Result;
+            while (true);
+
+            Product? findProduct = storageCRUD.FindProductsById(indexProduct).Result;
             if (findProduct == null)
             {
                 Console.WriteLine("По такому ID продукта нема");
