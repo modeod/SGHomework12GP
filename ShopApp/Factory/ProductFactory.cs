@@ -21,7 +21,8 @@ namespace GroupProject.factory
             var weightUnit = GetWeightUnits();
             var currency = GetCurrency();
 
-            return new ProductDTO(name, productType, price, amount, weightUnit, weight, currency);
+
+            return new ProductDTO(0, name, productType, price, amount, weightUnit, weight, currency);
         }
 
         private string GetName()

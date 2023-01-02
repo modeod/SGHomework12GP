@@ -16,7 +16,7 @@ namespace GroupProject.factory
             var product = base.CreateProduct();
             var expiryDate = GetExpiryDate();
 
-            return new FoodProductDTO(product.Name, DTO.Enums.ProdType.Food, product.Price, product.Amount, product.WeightUnit, product.Weight, product.Currency, expiryDate);
+            return new FoodProductDTO(0, product.Name, DTO.Enums.ProdType.Food, product.Price, product.Amount, product.WeightUnit, product.Weight, product.Currency, expiryDate);
         }
 
 
