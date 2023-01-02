@@ -1,17 +1,10 @@
 ﻿using GroupProject.DTO;
-using GroupProject.DTO.Enums;
 using Microsoft.EntityFrameworkCore;
 using ShopApp.DTO.MappingExtensions;
 using ShopApp.Entities.ProductEntity;
 using ShopApp.Interface;
-using ShopApp.PaymentService;
 using ShopApp.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ShopApp
 {
@@ -25,99 +18,99 @@ namespace ShopApp
             this.storageCRUD = storageCRUD;
             this.prodFabric = prodFabric;
         }
-        public void ShowMenu()
+        public async Task ShowMenu()
         {
-            Console.WriteLine("1 - Добавити продукт");
-            Console.WriteLine("2 - Видалити продукт");
-            Console.WriteLine("3 - Оновити продукт");
-            Console.WriteLine("4 - Показати продукти");
-            Console.WriteLine("5 - Найти продукт по ID");
-            Console.WriteLine("6 - Вихід");
-
+            Console.OutputEncoding = UTF8Encoding.UTF8;
             int menuCount;
             do
             {
-                Console.WriteLine("Введіть ваш вибір: ");
-                if (!int.TryParse(Console.ReadLine(), out menuCount))
-                {
-                    Console.WriteLine("Потрібно ввести хоть якесь число!");
-                    continue;
-                }
-                else
-                if (menuCount < 1 || menuCount > 6)
-                {
-                    Console.WriteLine("Введіть дані числа меню!");
-                }
-            }
-            while (menuCount < 1 || menuCount > 6);
+                Console.WriteLine("1 - Добавити продукт");
+                Console.WriteLine("2 - Видалити продукт");
+                Console.WriteLine("3 - Оновити продукт");
+                Console.WriteLine("4 - Показати продукти");
+                Console.WriteLine("5 - Найти продукт по ID");
+                Console.WriteLine("6 - Вихід");
 
-            switch (menuCount)
-            {
-                case 1:
+                do
+                {
+                    Console.WriteLine("Введіть ваш вибір: ");
+                    if (!int.TryParse(Console.ReadLine(), out menuCount))
                     {
-                        CreateProduct();
-                        break;
+                        Console.WriteLine("Потрібно ввести хоть якесь число!");
+                        continue;
                     }
-                case 2:
+                    if (menuCount < 1 || menuCount > 6)
                     {
-                        DeleteProduct();
-                        break;
+                        Console.WriteLine("Введіть дані числа меню!");
                     }
-                case 3:
-                    {
-                        ReadProduct();
-                        break;
-                    }
-                case 4:
-                    {
-                        UpdateProduct();
-                        break;
-                    }
-                case 5:
-                    {
-                        FindProductsById();
-                        break;
-                    }
-                case 6:
-                    {
-                        Console.WriteLine("Вихід.");
-                        break;
-                    }
-                default:
-                    throw
-                        new Exception("Помилка меню.");
-            }
+                }
+                while (menuCount < 1 || menuCount > 6);
+
+                switch (menuCount)
+                {
+                    case 1:
+                        {
+                            await CreateProduct();
+                            break;
+                        }
+                    case 2:
+                        {
+                            await DeleteProduct();
+                            break;
+                        }
+                    case 3:
+                        {
+                            await UpdateProduct();
+                            break;
+                        }
+                    case 4:
+                        {
+                            await ReadProduct();
+                            break;
+                        }
+                    case 5:
+                        {
+                            await FindProductsById();
+                            break;
+                        }
+                    case 6:
+                        {
+                            Console.WriteLine("Вихід.");
+                            break;
+                        }
+                    default:
+                        throw
+                            new Exception("Помилка меню.");
+                }
+            } while (menuCount!=6);
+            
         }
  
-        public void CreateProduct()
+        public async Task CreateProduct()
         {
             Console.WriteLine("Створення продукта");
             Type typeProduct = prodFabric.ChooseProductType();
             ProductDTO newProductDTO = prodFabric.CreateProduct();
             Product generalProduct;
-            if (typeProduct == typeof(NonFoodProductDTO))
+            if (typeProduct.Name == typeof(NonFoodProductDTO).Name)
             {
                 generalProduct = ((NonFoodProductDTO) newProductDTO).MapToProduct();
             }
-            else 
-                if (typeProduct == typeof(MeatDTO))
-            {
-                generalProduct = ((NonFoodProductDTO)newProductDTO).MapToProduct();
-            }
-            else 
-                if (typeProduct == typeof(MeatDTO))
+            else if (typeProduct.Name == typeof(MeatDTO).Name)
             {
                 generalProduct = ((MeatDTO)newProductDTO).MapToProduct();
             }
+            else if (typeProduct.Name == typeof(FoodProductDTO).Name)
+            {
+                generalProduct = ((FoodProductDTO)newProductDTO).MapToProduct();
+            }
             else 
-                throw
-                    new ArgumentException("Не правильно створена фабрика");
+                throw new Exception("Не правильно створена фабрика");
+            
             try
             {
-                if (storageCRUD.CreateProduct(generalProduct).Result != null)
-                {
-                    Console.WriteLine("Продукт створений");
-                }
+                await storageCRUD.CreateProduct(generalProduct);
+                Console.WriteLine("Продукт створений");
             }
             catch (OperationCanceledException ex)
             {
@@ -137,7 +130,7 @@ namespace ShopApp
             }
         }
 
-        public void DeleteProduct()
+        public async Task DeleteProduct()
         {
             Console.WriteLine("Щоб відмінити видалення введіть мінусове число");
             int indexProduct;
@@ -156,7 +149,7 @@ namespace ShopApp
 
             try
             {
-                storageCRUD.DeleteProduct(indexProduct);
+                await storageCRUD.DeleteProduct(indexProduct);
                 Console.WriteLine("Продукт видалений");
             }
             catch (OperationCanceledException ex)
@@ -177,7 +170,7 @@ namespace ShopApp
             }
         }
 
-        public void ReadProduct()
+        public async Task ReadProduct()
         {
             List<Product> listProduct = new List<Product>();
 
@@ -210,7 +203,7 @@ namespace ShopApp
                 }
             }
         }
-        public void UpdateProduct()
+        public async Task UpdateProduct()
         {
             Product generalProduct;
             Console.WriteLine("Щоб відмінити видалення введіть мінусове число");
@@ -223,9 +216,9 @@ namespace ShopApp
                     if (indexProduct < 0) return;
                     break;
                 }
-                else
-                    Console.WriteLine("Потрібно ввести хоть якесь число!");
-                if (storageCRUD.FindProductsById(indexProduct) == null)
+                else Console.WriteLine("Потрібно ввести хоть якесь число!");
+
+                if (await storageCRUD.FindProductsById(indexProduct) == null)
                 {
                     Console.WriteLine("Продукта з таким індексом не існує");
                 }
@@ -235,32 +228,27 @@ namespace ShopApp
             Type typeProduct = prodFabric.ChooseProductType();
             ProductDTO newProductDTO = prodFabric.CreateProduct();
 
-            if (typeProduct == typeof(NonFoodProductDTO))
+            if (typeProduct.Name == typeof(NonFoodProductDTO).Name)
             {
                 generalProduct = ((NonFoodProductDTO)newProductDTO).MapToProduct();
             }
-            else
-                 if (typeProduct == typeof(MeatDTO))
-            {
-                generalProduct = ((NonFoodProductDTO)newProductDTO).MapToProduct();
-            }
-            else
-                 if (typeProduct == typeof(MeatDTO))
+            else if (typeProduct.Name == typeof(MeatDTO).Name)
             {
                 generalProduct = ((MeatDTO)newProductDTO).MapToProduct();
             }
+            else if (typeProduct.Name == typeof(FoodProductDTO).Name)
+            {
+                generalProduct = ((FoodProductDTO)newProductDTO).MapToProduct();
+            }
             else
-                throw
-                    new ArgumentException("Не правильно створена фабрика");
+                throw new Exception("Не правильно створена фабрика");
 
             generalProduct.VendorCode = indexProduct;
 
             try
             {
-                if (storageCRUD.UpdateProduct(generalProduct).Result != null)
-                {
-                    Console.WriteLine("Продукт оновлений");
-                }
+                await storageCRUD.UpdateProduct(generalProduct);
+                Console.WriteLine("Продукт оновлений");
             }
             catch (OperationCanceledException ex)
             {
@@ -280,7 +268,7 @@ namespace ShopApp
             }
         }
 
-        public void FindProductsById()
+        public async Task FindProductsById()
         {
             Console.WriteLine("Щоб відмінити видалення введіть мінусове число");
             int indexProduct;
@@ -307,22 +295,21 @@ namespace ShopApp
                 Console.WriteLine(ToStringProduct(findProduct));
             }
         }
-
         private string ToStringProduct(Product product)
         {
             string result = "";
-            result += product.VendorCode+" | ";
-            result += product.ProdType + " | ";
+            result += "ID: "+ product.VendorCode+" | ";
             result += product.Name + " | ";
-            result += product.Description!=null? product.Description + " | " : "";
-            result += product.Amount + " | ";
-            result += product.WeightUnit + " | ";
-            result += product.Weight.ToString() + " | ";
-            result += product.Weight + " | ";
-            result += product.MeatSort != null ? product.MeatSort.ToString() + " | " : "";
-            result += product.MeatType != null ? product.MeatType.ToString() + " | " : "";
-            result += product.ExpiryDate != null ? product.ExpiryDate.ToString() + " | " : "";
-            result += product.Currency + " | ";
+            result += "Тип продукту: " + product.ProdType.ToString() + " | ";
+            result += product.Description!=null? "Опис: "+product.Description + " | " : "";
+            result += "Кількість: "+product.Amount + " | ";
+            result += "Одиниці ваги: "+product.WeightUnit.ToString() + " | ";
+            result += "Вага: "+product.Weight.ToString() + " | ";
+            result += product.MeatSort != null ? "Сорт мяса: "+product.MeatSort.ToString() + " | " : "";
+            result += product.MeatType != null ? "Тип мяса: "+product.MeatType.ToString() + " | " : "";
+            result += product.ExpiryDate != null ? "Термін придатності: "+product.ExpiryDate.ToString() + " | " : "";
+            result += "Валюта: "+product.Currency + " | ";
+            result += "Ціна: "+product.Price + " | ";
             return result;
         }
     }
