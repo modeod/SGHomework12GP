@@ -13,5 +13,6 @@ namespace ShopApp.Interface
         public void DeleteProduct();
         public void ReadProduct();
         public void UpdateProduct();
+        public void FindProductsById(int id);
     }
 }

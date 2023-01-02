@@ -207,6 +207,71 @@ namespace ShopApp
         }
         public void UpdateProduct()
         {
+            Product generalProduct;
+            Console.WriteLine("Щоб відмінити видалення введіть мінусове число");
+            int indexProduct;
+            do
+            {
+                Console.WriteLine("Введіть код продукта: ");
+                if (int.TryParse(Console.ReadLine(), out indexProduct))
+                {
+                    break;
+                }
+                else
+                    Console.WriteLine("Потрібно ввести хоть якесь число!");
+            }
+            while (indexProduct != -1);
+
+            prodFabric.ChooseProductType();
+            ProductDTO newProductDTO = prodFabric.CreateProduct();
+
+            if (newProductDTO is NonFoodProductDTO nonFoodProductDTO)
+            {
+                generalProduct = nonFoodProductDTO.MapToProduct();
+            }
+            else
+                if (newProductDTO is MeatDTO meatDTO)
+            {
+                generalProduct = meatDTO.MapToProduct();
+            }
+            else
+                if (newProductDTO is FoodProductDTO foodProductDTO)
+            {
+                generalProduct = foodProductDTO.MapToProduct();
+            }
+            else
+                throw
+                    new ArgumentException("Не правильно створена фабрика");
+
+            generalProduct.VendorCode = indexProduct;
+
+            try
+            {
+                if (storageCRUD.UpdateProduct(generalProduct).Result != null)
+                {
+                    Console.WriteLine("Продукт створений");
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine("Операція створення аварійно зупинена " + ex.Message);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine("Аргумент має NULL значення " + ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine("Помилка добавлення в репозиторій " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Помилка створення продукту " + ex.Message);
+            }
+        }
+
+        public void FindProductsById(int id)
+        {
             throw new NotImplementedException();
         }
     }
