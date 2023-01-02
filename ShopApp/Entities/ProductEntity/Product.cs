@@ -9,7 +9,7 @@ namespace ShopApp.Entities.ProductEntity
         public int VendorCode { get; set; }
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
-
+        public uint Amount { get; set; }
 
         public int ManufacterId { get; set; }
         public Manufacter Manufacter { get; set; } = null!;

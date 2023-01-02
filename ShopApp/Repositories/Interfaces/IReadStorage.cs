@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories.Interfaces
 {
-    internal interface IReadStorage
+    public interface IReadStorage
     {
         Task<List<Product>> ReadProducts();
         Task<Product?> FindProductsById(int id);

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories.Interfaces
 {
-    internal interface ICRUDStorage : IReadStorage
+    public interface ICRUDStorage : IReadStorage
     {
-        Task<bool> CreateProduct(Product product);
-        Task<bool> UpdateProduct(Product product);
-        Task<bool> DeleteProduct(Product product);
+        Task<Product> CreateProduct(Product product);
+        Task<Product> UpdateProduct(Product product);
+        Task<Product> DeleteProduct(int vendorCode);
     }
 }

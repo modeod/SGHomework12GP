@@ -8,38 +8,47 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories
 {
-    internal class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         private ShopDbContext _shopDbContext;
         public UserRepository(ShopDbContext context)
         {
             _shopDbContext = context;
         }
-        public async Task<bool> AddUser(User user)
+        public async Task<User> AddUser(User user)
         {
+            if (user is null)
+            {
+                throw new NullReferenceException("User can`t be null");
+            }
             try
             {
                 await _shopDbContext.Users.AddAsync(user);
                 await _shopDbContext.SaveChangesAsync();
-                return true;
+                return _shopDbContext.Users.First(u => u.Id == user.Id);
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t add user");
             }
         }
 
-        public async Task<bool> Delete(User user)
+        public async Task<User> Delete(int id)
         {
+            var user = await _shopDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+            {
+                throw new ArgumentException("Wrong id");
+            }
             try
             {
                 _shopDbContext.Users.Remove(user);
                 await _shopDbContext.SaveChangesAsync();
-                return true;
+                return user;
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new Exception("Couldn`t delete user");
             }
         }
 
@@ -53,17 +62,21 @@ namespace ShopApp.Repositories
             return await _shopDbContext.Users.FindAsync(id);
         }
 
-        public async Task<bool> Update(User user)
+        public async Task<User> Update(User user)
         {
+            if (user is null)
+            {
+                throw new NullReferenceException("User can`t be null");
+            }
             try
             {
                 _shopDbContext.Entry(user).State = EntityState.Modified;
                 await _shopDbContext.SaveChangesAsync();
-                return true;
+                return _shopDbContext.Users.First(u => u.Id == user.Id);
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t update user");
             }
         }
     }

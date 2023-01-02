@@ -9,38 +9,47 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories
 {
-    internal class OrderRepository : ICRUDOrders
+    public class OrderRepository : ICRUDOrders
     {
         private ShopDbContext _dbContext;
         public OrderRepository(ShopDbContext context)
         {
             _dbContext = context;
         }
-        public async Task<bool> CreateOrder(Order order)
+        public async Task<Order> CreateOrder(Order order)
         {
+            if (order is null)
+            {
+                throw new NullReferenceException("Order can`t be null");
+            }
             try
             {
                 await _dbContext.Orders.AddAsync(order);
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return await _dbContext.Orders.FirstAsync(o => o.Id == order.Id);
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t create order");
             }
         }
 
-        public async Task<bool> DeleteOrder(Order order)
+        public async Task<Order> DeleteOrder(int id)
         {
+            var order = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            if (order == null)
+            {
+                throw new ArgumentException("Wrong id");
+            }
             try
             {
                 _dbContext.Remove(order);
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return order;
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new Exception("Couldn`t delete order");
             }
         }
 
@@ -53,17 +62,21 @@ namespace ShopApp.Repositories
             return await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public async Task<bool> UpdateOrder(Order order)
+        public async Task<Order> UpdateOrder(Order order)
         {
+            if (order is null)
+            {
+                throw new NullReferenceException("Order can`t be null");
+            }
             try
             {
                 _dbContext.Entry(order).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return await _dbContext.Orders.FirstAsync(o => o.Id == order.Id);
             }
-            catch (Exception)
+            catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t update order");
             }
         }
     }

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories
 {
-    internal interface IUserRepository
+    public interface IUserRepository
     {
         Task<List<User>> GetAll();
         Task<User?> GetById(int id);
-        Task<bool> AddUser(User user);
-        Task<bool> Update(User user);
-        Task<bool> Delete(User user);
+        Task<User> AddUser(User user);
+        Task<User> Update(User user);
+        Task<User> Delete(int id);
     }
 }
