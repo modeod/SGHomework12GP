@@ -28,7 +28,7 @@ namespace GroupProject.factory
                 uint res;
                 do
                 {
-                    Console.WriteLine("Meat Type ( 0 - Pork, 1 - Lamb, 2 - Chicken): ");
+                    Console.WriteLine("Meat Type (0 - Pork, 1 - Lamb, 2 - Chicken): ");
                     string input = Console.ReadLine();
                     res = Convert.ToUInt32(input);
                 }
