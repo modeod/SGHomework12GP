@@ -1,4 +1,5 @@
 ﻿using ShopApp.Entities.OrderEntity;
+using ShopApp.Entities.OrderItemEntity;
 using ShopApp.Entities.ProductEntity;
 using ShopApp.Interface;
 using ShopApp.Repositories.Interfaces;
@@ -17,6 +18,10 @@ namespace ShopApp.UI
         private IProxyPay payment;
 
         public Order CurrentOrder { get; set; }
+        public UserConsole()
+        {
+
+        }
 
         public UserConsole(IReadStorage storage, IUserOrder orderService, IProxyPay payment, Order currentOrder)
         {
@@ -27,14 +32,62 @@ namespace ShopApp.UI
         }
         public void ShowMenu()
         {
-            Console.WriteLine("Оберiть номер пункта меню:".Replace('і', 'i'));
-            Console.WriteLine("1. Вивести весь список продуктів.".Replace('і', 'i'));
-            Console.WriteLine("2. Знайти продукт за номером.");
-            Console.WriteLine("3. Показати мої замовлення.");
-            Console.WriteLine("4. Знайти продукт за номером.");
-            Console.WriteLine("5. Оновити поточне замовлення.");
-            Console.WriteLine("7. Підтвердити поточне замовлення.".Replace('і', 'i'));
-            Console.WriteLine("8. Сплатити поточне замовлення.");
+            Console.BackgroundColor = ConsoleColor.Green;
+            Console.WriteLine(">>> Вiтаємо у нашому магазинi та бажаємо приємних покупок! <<<");
+            Console.ResetColor();
+            while (true)
+            {
+                Console.WriteLine("Оберiть номер пункта меню:".Replace('і', 'i'));
+                Console.WriteLine("1. Вивести весь список продуктів.".Replace('і', 'i'));
+                Console.WriteLine("2. Знайти продукт за номером.");
+                Console.WriteLine("3. Показати мої замовлення.");
+                Console.WriteLine("4. Оновити поточне замовлення.");
+                Console.WriteLine("5. Підтвердити поточне замовлення.".Replace('і', 'i'));
+                Console.WriteLine("6. Сплатити поточне замовлення.");
+                Console.WriteLine("7. Вихiд.");
+                int choose=Convert.ToInt32(Console.ReadLine());
+                switch (choose)
+                { 
+                    case 1:
+                        Console.Clear();
+                        ShowListOfProducts();
+                        break;
+                    case 2:
+                        Console.Clear();
+                        Console.WriteLine("Введiть номер продукта для пошуку:");
+                        int productNumber=Convert.ToInt32(Console.ReadLine());
+                        FindProductsById(productNumber);
+                        break;
+                    case 3:
+                        Console.Clear();
+                        GetMyOrders();
+                        break;
+                    case 4:
+                        Console.Clear();
+                        Console.WriteLine("Введiть номер продукту, який бажаєте додати до замовлення:");
+                        productNumber=Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Введiть кiлькiсть продуктiв, який бажаєте додати до замовлення:");
+                        int amount=Convert.ToInt32(Console.ReadLine());
+                        UpdateCurrentOrder(FindProductsById(productNumber),amount);
+                        break;
+                    case 5:
+                        Console.Clear();
+                        ApplyOrder();
+                        break;
+                    case 6:
+                        Console.Clear();
+                        ApplyPayment();
+                        break;
+                    case 7:
+                        Console.Clear();
+                        Console.BackgroundColor = ConsoleColor.Green;
+                        Console.WriteLine(">>> Дякуємо, що завiтали до нас! <<<");
+                        Console.ResetColor();
+                        return;
+                }
+
+            }
+
         }
         public void GetMyOrders()
         {
@@ -46,8 +99,8 @@ namespace ShopApp.UI
                 Console.WriteLine($"Дата замовлення:{item.OrderedAt}");
                 foreach (var orderItem in item.OrderItems)
                 {
-                    Console.WriteLine($"{orderItem.Product.Name}............{orderItem.Amount} шт. {orderItem.Amount * orderItem.PriceWithSale}");
-                    totalPrice += orderItem.Amount * orderItem.PriceWithSale;
+                    Console.WriteLine($"{orderItem.Product.Name}............{orderItem.Amount} шт. {orderItem.PriceWithSale}");
+                    totalPrice += orderItem.PriceWithSale;
                 }
                 Console.WriteLine($"Вартість: {totalPrice}");
                 Console.WriteLine(new String('=', 50));
@@ -64,19 +117,19 @@ namespace ShopApp.UI
             }
         }
 
-        public void FindProductsById(int id)
+        public Product? FindProductsById(int id)
         {
-
-            var product = storage.FindProductsById(id).Result;
+             var product = storage.FindProductsById(id).Result;
             if (product is null)
             {
-                Console.WriteLine("Продуктiв з такою назвою не знайдено.");
+                Console.WriteLine("Продуктiв з таким номером не знайдено.");
             }
             else
             {
                 ShowProduct(product);
                 Console.WriteLine(new string('-', 30));
             }
+            return product;
         }
 
 
@@ -87,8 +140,25 @@ namespace ShopApp.UI
             Console.WriteLine($"Виробник: {product.Manufacter.Title}");
         }
 
-        public void UpdateCurrentOrder()
+        public void UpdateCurrentOrder(Product product, int amount)
         {
+            if(product is null || amount<=0)
+            {
+                Console.WriteLine("Iнформацiя про товар або кiлькi сть введено неправильно.");
+                return;
+            }
+            if(CurrentOrder is null)
+            {
+                CurrentOrder = new Order();
+            }
+            var newOrderItem = new OrderItem()
+            {
+                Id = CurrentOrder.OrderItems.Count == 0 ? 0 : CurrentOrder.OrderItems.Count,
+                Amount = amount,
+                Product = product,
+                ProductVendorCode = product.VendorCode
+            };
+            CurrentOrder.OrderItems.Add(newOrderItem);
 
         }
 
