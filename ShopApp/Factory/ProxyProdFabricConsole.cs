@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Factory
 {
-    internal class ProxyProdFabricConsole
+    public class ProxyProdFabricConsole
     {
     }
 }

@@ -10,6 +10,6 @@ namespace ShopApp.Interface
     public interface IProxyProdFabric : IProductFactory
     {
         public ProductDTO CreateProduct();
-        public void ChooseProductType();
+        public Type ChooseProductType();
     }
 }

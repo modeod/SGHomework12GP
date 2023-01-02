@@ -8,19 +8,18 @@ using System.Threading.Tasks;
 
 namespace GroupProject.factory
 {
-    public class NonFoodFactory : IProductFactory
+    public class NonFoodFactory : ProductFactory
     {
-        public ProductDTO CreateProduct()
+        public new ProductDTO CreateProduct()
         {
-            var name = Input.GetName();
-            var price = Input.GetPrice();
-            var amount = Input.GetProductAmount();
-            var weight = Input.GetWeight();
-            var weightUnit = Input.GetWeightUnits();
-            var currency = Input.GetCurrency();
-            var description = Input.GetDescription();
+            var product = base.CreateProduct();
+            var description = GetDescription();
 
-            return new NonFoodProductDTO(name, DTO.Enums.ProdType.Vehicle, price, amount, weightUnit, weight, currency, description);
+            return new NonFoodProductDTO(product.Name, DTO.Enums.ProdType.Vehicle, product.Price, product.Amount, product.WeightUnit, product.Weight, product.Currency, description);
+        }
+        public static string GetDescription()
+        {
+            return Console.ReadLine() ?? "";
         }
     }
 }
