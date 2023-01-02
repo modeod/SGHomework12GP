@@ -17,7 +17,7 @@ namespace GroupProject.factory
             var meatType = GetMeatType();
             var meatTSort = GetMeatSort();
 
-            return new MeatDTO(foodProduct.Name, DTO.Enums.ProdType.Meat, foodProduct.Price, foodProduct.Amount, foodProduct.WeightUnit, foodProduct.Weight, foodProduct.Currency, foodProduct.ExpiryDate, meatTSort, meatType);
+            return new MeatDTO(0, foodProduct.Name, DTO.Enums.ProdType.Meat, foodProduct.Price, foodProduct.Amount, foodProduct.WeightUnit, foodProduct.Weight, foodProduct.Currency, foodProduct.ExpiryDate, meatTSort, meatType);
         }
 
 
