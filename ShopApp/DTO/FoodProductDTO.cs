@@ -9,8 +9,9 @@ namespace GroupProject.DTO
 {
     public class FoodProductDTO : ProductDTO
     {
-        public FoodProductDTO(string name, ProdType prodType, decimal price, uint amount, Weight weightUnit, double weight, Currency currency, DateTime expiryDate) 
-                                    : base(name, prodType, price, amount, weightUnit, weight, currency)
+
+        public FoodProductDTO(int vendorCode, string name, ProdType prodType, decimal price, uint amount, Weight weightUnit, double weight, Currency currency, DateTime expiryDate) 
+                                    : base(vendorCode, name, prodType, price, amount, weightUnit, weight, currency)
         {
             ExpiryDate = expiryDate;
         }
