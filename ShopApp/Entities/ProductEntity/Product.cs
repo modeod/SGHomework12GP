@@ -1,6 +1,5 @@
 ﻿using GroupProject.DTO.Enums;
 using ShopApp.Entities.FavouriteEntity;
-using ShopApp.Entities.ManufactureEntity;
 using ShopApp.Entities.OrderItemEntity;
 
 namespace ShopApp.Entities.ProductEntity
@@ -19,8 +18,6 @@ namespace ShopApp.Entities.ProductEntity
         public MeatType? MeatType { get; set; }
         public DateTime? ExpiryDate { get; set; }
         public Currency Currency { get; set; }
-        public int? ManufacterId { get; set; }
-        public virtual Manufacter Manufacter { get; set; }
         public virtual ICollection<OrderItem> OrderItems { get; set; }
         public virtual ICollection<Favourite> Favourites { get; set; }
     }

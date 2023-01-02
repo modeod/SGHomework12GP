@@ -13,14 +13,6 @@ namespace ShopApp.Entities.ProductEntity
             builder
                 .Property(x => x.Name)
                 .IsRequired();
-
-            builder.Property(x => x.ManufacterId)
-                .IsRequired();
-
-            builder
-                .HasOne(x => x.Manufacter)
-                .WithMany(x => x.Products)
-                .HasForeignKey(x => x.ManufacterId);
         }
     }
 }

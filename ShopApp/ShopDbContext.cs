@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopApp.Entities.AddressEntity;
 using ShopApp.Entities.FavouriteEntity;
-using ShopApp.Entities.ManufactureEntity;
 using ShopApp.Entities.OrderEntity;
 using ShopApp.Entities.OrderItemEntity;
 using ShopApp.Entities.OrderStatusEntity;
@@ -22,7 +21,6 @@ namespace ShopApp
 
             modelBuilder.ApplyConfiguration(new AddressConfiguration());
             modelBuilder.ApplyConfiguration(new FavouriteConfiguration());
-            modelBuilder.ApplyConfiguration(new ManufactureConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
             modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
@@ -33,7 +31,6 @@ namespace ShopApp
 
         public DbSet<Address> Addresses { get; set; } = null!;
         public DbSet<Favourite> Favourites { get; set; } = null!;
-        public DbSet<Manufacter> Manufactures { get; set; } = null!; 
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
         public DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
