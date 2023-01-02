@@ -9,6 +9,6 @@ namespace ShopApp.Repositories.Interfaces
 {
     public interface ICRUDOrders : IUserOrder
     {
-        Task<Order> DeleteOrder(Order order);
+        Task<Order> DeleteOrder(int id);
     }
 }

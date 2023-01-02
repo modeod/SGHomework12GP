@@ -11,6 +11,6 @@ namespace ShopApp.Repositories.Interfaces
     {
         Task<Product> CreateProduct(Product product);
         Task<Product> UpdateProduct(Product product);
-        Task<Product> DeleteProduct(Product product);
+        Task<Product> DeleteProduct(int vendorCode);
     }
 }

@@ -34,11 +34,12 @@ namespace ShopApp.Repositories
             }
         }
 
-        public async Task<Product> DeleteProduct(Product product)
+        public async Task<Product> DeleteProduct(int vendorCode)
         {
-            if (product is null)
+            var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.VendorCode == vendorCode);
+            if (product == null)
             {
-                throw new NullReferenceException("Product can`t be null");
+                throw new ArgumentException("Wrong id");
             }
             try
             {
@@ -48,7 +49,7 @@ namespace ShopApp.Repositories
             }
             catch (DbUpdateException)
             {
-                throw new ArgumentException("Couldn`t delete order");
+                throw new Exception("Couldn`t delete order");
             }
         }
 

@@ -34,11 +34,12 @@ namespace ShopApp.Repositories
             }
         }
 
-        public async Task<Order> DeleteOrder(Order order)
+        public async Task<Order> DeleteOrder(int id)
         {
-            if (order is null)
+            var order = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            if (order == null)
             {
-                throw new NullReferenceException("Order can`t be null");
+                throw new ArgumentException("Wrong id");
             }
             try
             {
@@ -48,7 +49,7 @@ namespace ShopApp.Repositories
             }
             catch (DbUpdateException)
             {
-                throw new ArgumentException("Couldn`t delete order");
+                throw new Exception("Couldn`t delete order");
             }
         }
 

@@ -14,6 +14,6 @@ namespace ShopApp.Repositories
         Task<User?> GetById(int id);
         Task<User> AddUser(User user);
         Task<User> Update(User user);
-        Task<User> Delete(User user);
+        Task<User> Delete(int id);
     }
 }

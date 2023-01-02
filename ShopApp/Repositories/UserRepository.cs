@@ -33,11 +33,12 @@ namespace ShopApp.Repositories
             }
         }
 
-        public async Task<User> Delete(User user)
+        public async Task<User> Delete(int id)
         {
-            if (user is null)
+            var user = await _shopDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
             {
-                throw new NullReferenceException("User can`t be null");
+                throw new ArgumentException("Wrong id");
             }
             try
             {
@@ -47,7 +48,7 @@ namespace ShopApp.Repositories
             }
             catch (DbUpdateException)
             {
-                throw new ArgumentException("Couldn`t delete user");
+                throw new Exception("Couldn`t delete user");
             }
         }
 
