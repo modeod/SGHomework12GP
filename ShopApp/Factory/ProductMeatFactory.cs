@@ -1,4 +1,5 @@
 ﻿using GroupProject.DTO;
+using GroupProject.DTO.Enums;
 using ShopApp.Interface;
 using System;
 using System.Collections.Generic;
@@ -8,21 +9,68 @@ using System.Threading.Tasks;
 
 namespace GroupProject.factory
 {
-    public class ProductMeatFactory : IProductFactory
+    public class ProductMeatFactory : ProductFoodFactory
     {
-        public ProductDTO CreateProduct()
+        public new MeatDTO CreateProduct()
         {
-            var name = Input.GetName();
-            var price = Input.GetPrice();
-            var amount = Input.GetProductAmount();
-            var weight = Input.GetWeight();
-            var weightUnit = Input.GetWeightUnits();
-            var currency = Input.GetCurrency();
-            var expiryDate = Input.GetExpiryDate();
-            var meatType = Input.GetMeatType();
-            var meatTSort = Input.GetMeatSort();
+            var foodProduct = base.CreateProduct();
+            var meatType = GetMeatType();
+            var meatTSort = GetMeatSort();
 
-            return new MeatDTO(name, DTO.Enums.ProdType.Meat, price, amount, weightUnit, weight, currency, expiryDate, meatTSort, meatType);
+            return new MeatDTO(foodProduct.Name, DTO.Enums.ProdType.Meat, foodProduct.Price, foodProduct.Amount, foodProduct.WeightUnit, foodProduct.Weight, foodProduct.Currency, foodProduct.ExpiryDate, meatTSort, meatType);
+        }
+
+
+        public static MeatType GetMeatType()
+        {
+            try
+            {
+                uint res;
+                do
+                {
+                    Console.WriteLine("Meat Type ( 0 - Pork, 1 - Lamb, 2 - Chicken): ");
+                    string input = Console.ReadLine();
+                    res = Convert.ToUInt32(input);
+                }
+                while (res > 2 && res < 0);
+                return (MeatType)res;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Incorrect formatting.");
+                return GetMeatType();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return GetMeatType();
+            }
+        }
+
+        public static MeatSort GetMeatSort()
+        {
+            try
+            {
+                uint res;
+                do
+                {
+                    Console.WriteLine("Meat sort ( 0 - First, 1 - Second): ");
+                    string input = Console.ReadLine();
+                    res = Convert.ToUInt32(input);
+                }
+                while (res > 1 && res < 0);
+                return (MeatSort)res;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Incorrect formatting.");
+                return GetMeatSort();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return GetMeatSort();
+            }
         }
     }
 }

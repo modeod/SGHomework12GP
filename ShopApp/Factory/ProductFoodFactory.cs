@@ -2,25 +2,44 @@
 using ShopApp.Interface;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GroupProject.factory
 {
-    public class ProductFoodFactory : IProductFactory
+    public class ProductFoodFactory : ProductFactory
     {
-        public ProductDTO CreateProduct()
+        public new FoodProductDTO CreateProduct()
         {
-            var name = Input.GetName();
-            var price = Input.GetPrice();
-            var amount = Input.GetProductAmount();
-            var weight = Input.GetWeight();
-            var weightUnit = Input.GetWeightUnits();
-            var currency = Input.GetCurrency();
-            var expiryDate = Input.GetExpiryDate();
+            var product = base.CreateProduct();
+            var expiryDate = GetExpiryDate();
 
-            return new FoodProductDTO(name, DTO.Enums.ProdType.Food, price, amount, weightUnit, weight, currency, expiryDate);
+            return new FoodProductDTO(product.Name, DTO.Enums.ProdType.Food, product.Price, product.Amount, product.WeightUnit, product.Weight, product.Currency, expiryDate);
+        }
+
+
+        public static DateOnly GetExpiryDate()
+        {
+            try
+            {
+                string format = "dd.MM.yyyy";
+                DateOnly res;
+                do
+                {
+                    Console.WriteLine("Enter expiry date (Format: DD.MM.YYYY): ");
+                    string input = Console.ReadLine();
+                    res = DateOnly.ParseExact(input, format, CultureInfo.InvariantCulture);
+                }
+                while (res <= DateOnly.FromDateTime(DateTime.Now.Date));
+                return res;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Incorrect formatting.");
+                return GetExpiryDate();
+            }
         }
     }
 }
