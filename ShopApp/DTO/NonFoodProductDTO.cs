@@ -9,8 +9,8 @@ namespace GroupProject.DTO
 {
     public class NonFoodProductDTO : ProductDTO
     {
-        public NonFoodProductDTO(string name, ProdType prodType, decimal price, uint amount, Weight weightUnit, double weight, Currency currency, string description)
-                                    : base(name, prodType, price, amount, weightUnit, weight, currency)
+        public NonFoodProductDTO(int vendorCode, string name, ProdType prodType, decimal price, uint amount, Weight weightUnit, double weight, Currency currency, string description)
+                                    : base(vendorCode, name, prodType, price, amount, weightUnit, weight, currency)
         {
             Description = description;
         }

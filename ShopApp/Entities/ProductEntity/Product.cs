@@ -1,4 +1,5 @@
-﻿using ShopApp.Entities.FavouriteEntity;
+﻿using GroupProject.DTO.Enums;
+using ShopApp.Entities.FavouriteEntity;
 using ShopApp.Entities.ManufactureEntity;
 using ShopApp.Entities.OrderItemEntity;
 
@@ -7,15 +8,20 @@ namespace ShopApp.Entities.ProductEntity
     public class Product
     {
         public int VendorCode { get; set; }
-        public string Name { get; set; } = null!;
+        public decimal Price { get; set; }
+        public ProdType ProdType { get; set; }
+        public string Name { get; set; }
         public string? Description { get; set; }
         public uint Amount { get; set; }
-
-        public int ManufacterId { get; set; }
-        public Manufacter Manufacter { get; set; } = null!;
-
-        public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
-
-        public List<Favourite> Favourites { get; set; } = new List<Favourite>();
+        public Weight WeightUnit { get; set; }
+        public double Weight { get; set; }
+        public MeatSort? MeatSort { get; set; }
+        public MeatType? MeatType { get; set; }
+        public DateTime? ExpiryDate { get; set; }
+        public Currency Currency { get; set; }
+        public int? ManufacterId { get; set; }
+        public virtual Manufacter Manufacter { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<Favourite> Favourites { get; set; }
     }
 }
