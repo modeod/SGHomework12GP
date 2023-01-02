@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories
 {
-    internal class OrderRepository : ICRUDOrders
+    public class OrderRepository : ICRUDOrders
     {
         private ShopDbContext _dbContext;
         public OrderRepository(ShopDbContext context)
@@ -18,6 +18,10 @@ namespace ShopApp.Repositories
         }
         public async Task<Order> CreateOrder(Order order)
         {
+            if (order is null)
+            {
+                throw new NullReferenceException("Order can`t be null");
+            }
             try
             {
                 await _dbContext.Orders.AddAsync(order);
@@ -32,6 +36,10 @@ namespace ShopApp.Repositories
 
         public async Task<Order> DeleteOrder(Order order)
         {
+            if (order is null)
+            {
+                throw new NullReferenceException("Order can`t be null");
+            }
             try
             {
                 _dbContext.Remove(order);
@@ -55,6 +63,10 @@ namespace ShopApp.Repositories
 
         public async Task<Order> UpdateOrder(Order order)
         {
+            if (order is null)
+            {
+                throw new NullReferenceException("Order can`t be null");
+            }
             try
             {
                 _dbContext.Entry(order).State = EntityState.Modified;

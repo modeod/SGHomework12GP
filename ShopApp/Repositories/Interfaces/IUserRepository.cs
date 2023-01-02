@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories
 {
-    internal interface IUserRepository
+    public interface IUserRepository
     {
         Task<List<User>> GetAll();
         Task<User?> GetById(int id);

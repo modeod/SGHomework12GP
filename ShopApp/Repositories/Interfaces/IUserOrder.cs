@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories.Interfaces
 {
-    internal interface IUserOrder
+    public interface IUserOrder
     {
         Task<List<Order>> GetAll();
         Task<Order?> GetById(int id);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories
 {
-    internal class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         private ShopDbContext _shopDbContext;
         public UserRepository(ShopDbContext context)
@@ -17,6 +17,10 @@ namespace ShopApp.Repositories
         }
         public async Task<User> AddUser(User user)
         {
+            if (user is null)
+            {
+                throw new NullReferenceException("User can`t be null");
+            }
             try
             {
                 await _shopDbContext.Users.AddAsync(user);
@@ -31,6 +35,10 @@ namespace ShopApp.Repositories
 
         public async Task<User> Delete(User user)
         {
+            if (user is null)
+            {
+                throw new NullReferenceException("User can`t be null");
+            }
             try
             {
                 _shopDbContext.Users.Remove(user);
@@ -55,6 +63,10 @@ namespace ShopApp.Repositories
 
         public async Task<User> Update(User user)
         {
+            if (user is null)
+            {
+                throw new NullReferenceException("User can`t be null");
+            }
             try
             {
                 _shopDbContext.Entry(user).State = EntityState.Modified;

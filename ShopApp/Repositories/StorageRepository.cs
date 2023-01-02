@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories
 {
-    internal class StorageRepository : ICRUDStorage
+    public class StorageRepository : ICRUDStorage
     {
         private ShopDbContext _dbContext;
         public StorageRepository(ShopDbContext context)
@@ -18,6 +18,10 @@ namespace ShopApp.Repositories
         }
         public async Task<Product> CreateProduct(Product product)
         {
+            if (product is null)
+            {
+                throw new NullReferenceException("Product can`t be null");
+            }
             try
             {
                 await _dbContext.Products.AddAsync(product);
@@ -32,6 +36,10 @@ namespace ShopApp.Repositories
 
         public async Task<Product> DeleteProduct(Product product)
         {
+            if (product is null)
+            {
+                throw new NullReferenceException("Product can`t be null");
+            }
             try
             {
                 _dbContext.Products.Remove(product);
@@ -56,6 +64,10 @@ namespace ShopApp.Repositories
 
         public async Task<Product> UpdateProduct(Product product)
         {
+            if (product is null)
+            {
+                throw new NullReferenceException("Product can`t be null");
+            }
             try
             {
                 _dbContext.Entry(product).State = EntityState.Modified;
