@@ -95,19 +95,19 @@ namespace ShopApp
             Type typeProduct = prodFabric.ChooseProductType();
             ProductDTO newProductDTO = prodFabric.CreateProduct();
             Product generalProduct;
-            if (newProductDTO is NonFoodProductDTO nonFoodProductDTO)
+            if (typeProduct == typeof(NonFoodProductDTO))
             {
-                generalProduct = nonFoodProductDTO.MapToProduct();
+                generalProduct = ((NonFoodProductDTO) newProductDTO).MapToProduct();
             }
             else 
-                if (newProductDTO is MeatDTO meatDTO)
+                if (typeProduct == typeof(MeatDTO))
             {
-                generalProduct = meatDTO.MapToProduct();
+                generalProduct = ((NonFoodProductDTO)newProductDTO).MapToProduct();
             }
             else 
-                if (newProductDTO is FoodProductDTO foodProductDTO)
+                if (typeProduct == typeof(MeatDTO))
             {
-                generalProduct = foodProductDTO.MapToProduct();
+                generalProduct = ((MeatDTO)newProductDTO).MapToProduct();
             }
             else 
                 throw
@@ -228,22 +228,22 @@ namespace ShopApp
             }
             while (indexProduct != -1);
 
-            prodFabric.ChooseProductType();
+            Type typeProduct = prodFabric.ChooseProductType();
             ProductDTO newProductDTO = prodFabric.CreateProduct();
 
-            if (newProductDTO is NonFoodProductDTO nonFoodProductDTO)
+            if (typeProduct == typeof(NonFoodProductDTO))
             {
-                generalProduct = nonFoodProductDTO.MapToProduct();
+                generalProduct = ((NonFoodProductDTO)newProductDTO).MapToProduct();
             }
             else
-                if (newProductDTO is MeatDTO meatDTO)
+                 if (typeProduct == typeof(MeatDTO))
             {
-                generalProduct = meatDTO.MapToProduct();
+                generalProduct = ((NonFoodProductDTO)newProductDTO).MapToProduct();
             }
             else
-                if (newProductDTO is FoodProductDTO foodProductDTO)
+                 if (typeProduct == typeof(MeatDTO))
             {
-                generalProduct = foodProductDTO.MapToProduct();
+                generalProduct = ((MeatDTO)newProductDTO).MapToProduct();
             }
             else
                 throw
