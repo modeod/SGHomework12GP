@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories.Interfaces
 {
-    internal interface ICRUDOrders : IUserOrder
+    public interface ICRUDOrders : IUserOrder
     {
-        Task<bool> DeleteOrder(Order order);
+        Task<Order> DeleteOrder(int id);
     }
 }

@@ -9,38 +9,47 @@ using System.Threading.Tasks;
 
 namespace ShopApp.Repositories
 {
-    internal class StorageRepository : ICRUDStorage
+    public class StorageRepository : ICRUDStorage
     {
         private ShopDbContext _dbContext;
         public StorageRepository(ShopDbContext context)
         {
             _dbContext = context;
         }
-        public async Task<bool> CreateProduct(Product product)
+        public async Task<Product> CreateProduct(Product product)
         {
+            if (product is null)
+            {
+                throw new NullReferenceException("Product can`t be null");
+            }
             try
             {
                 await _dbContext.Products.AddAsync(product);
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return _dbContext.Products.First(p => p.VendorCode == product.VendorCode);
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t create product");
             }
         }
 
-        public async Task<bool> DeleteProduct(Product product)
+        public async Task<Product> DeleteProduct(int vendorCode)
         {
+            var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.VendorCode == vendorCode);
+            if (product == null)
+            {
+                throw new ArgumentException("Wrong id");
+            }
             try
             {
                 _dbContext.Products.Remove(product);
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return product;
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new Exception("Couldn`t delete order");
             }
         }
 
@@ -54,17 +63,21 @@ namespace ShopApp.Repositories
             return await _dbContext.Products.ToListAsync();
         }
 
-        public async Task<bool> UpdateProduct(Product product)
+        public async Task<Product> UpdateProduct(Product product)
         {
+            if (product is null)
+            {
+                throw new NullReferenceException("Product can`t be null");
+            }
             try
             {
                 _dbContext.Entry(product).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return _dbContext.Products.First(p => p.VendorCode == p.VendorCode);
             }
             catch (DbUpdateException)
             {
-                return false;
+                throw new ArgumentException("Couldn`t update order");
             }
         }
     }
