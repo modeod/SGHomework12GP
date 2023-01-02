@@ -8,6 +8,6 @@ namespace ShopApp.Interface
 {
     public interface IProxyPay : IPayment
     {
-        public IPayment ChoosePayment();
+        public IPayment ChoosePaymentSystem();
     }
 }

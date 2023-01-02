@@ -19,7 +19,7 @@ namespace ShopApp.PaymentService
             this.payment = payment;
         }
 
-        public IPayment ChoosePayment()
+        public IPayment ChoosePaymentSystem()
         {
             Console.WriteLine("1 - Платити готівкою");
             Console.WriteLine("2 - Платити карткою");
@@ -56,6 +56,7 @@ namespace ShopApp.PaymentService
 
         public bool Pay(uint _amount)
         {
+            payment = ChoosePaymentSystem();
             return payment.Pay(_amount);
         }
     }
