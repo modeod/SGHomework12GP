@@ -93,11 +93,13 @@ namespace ShopApp
             {
                 generalProduct = nonFoodProductDTO.MapToProduct();
             }
-            else if (newProductDTO is MeatDTO meatDTO)
+            else 
+                if (newProductDTO is MeatDTO meatDTO)
             {
                 generalProduct = meatDTO.MapToProduct();
             }
-            else if (newProductDTO is FoodProductDTO foodProductDTO)
+            else 
+                if (newProductDTO is FoodProductDTO foodProductDTO)
             {
                 generalProduct = foodProductDTO.MapToProduct();
             }
@@ -131,7 +133,43 @@ namespace ShopApp
 
         public void DeleteProduct()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Щоб відмінити видалення введіть мінусове число");
+            int indexProduct;
+            do
+            {
+                Console.WriteLine("Введіть код продукта: ");
+                if (int.TryParse(Console.ReadLine(), out indexProduct))
+                {
+                    break;
+                }
+                else
+                    Console.WriteLine("Потрібно ввести хоть якесь число!");
+            }
+            while (indexProduct != -1);
+
+            try
+            {
+                if (storageCRUD.DeleteProduct(indexProduct).Result != null)
+                {
+                    Console.WriteLine("Продукт видалений");
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine("Операція створення аварійно зупинена " + ex.Message);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine("Аргумент має NULL значення " + ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine("Помилка добавлення в репозиторій " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Помилка створення продукту " + ex.Message);
+            }
         }
 
         public void ReadProduct()
