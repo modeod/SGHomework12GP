@@ -31,7 +31,8 @@ namespace ShopApp
             Console.WriteLine("2 - Видалити продукт");
             Console.WriteLine("3 - Оновити продукт");
             Console.WriteLine("4 - Показати продукти");
-            Console.WriteLine("5 - Вихід");
+            Console.WriteLine("5 - Найти продукт по ID");
+            Console.WriteLine("6 - Вихід");
 
             int menuCount;
             do
@@ -43,12 +44,12 @@ namespace ShopApp
                     continue;
                 }
                 else
-                if (menuCount < 1 || menuCount > 5)
+                if (menuCount < 1 || menuCount > 6)
                 {
                     Console.WriteLine("Введіть дані числа меню!");
                 }
             }
-            while (menuCount < 1 || menuCount > 5);
+            while (menuCount < 1 || menuCount > 6);
 
             switch (menuCount)
             {
@@ -73,6 +74,11 @@ namespace ShopApp
                         break;
                     }
                 case 5:
+                    {
+                        FindProductsById();
+                        break;
+                    }
+                case 6:
                     {
                         Console.WriteLine("Вихід.");
                         break;
@@ -270,9 +276,30 @@ namespace ShopApp
             }
         }
 
-        public void FindProductsById(int id)
+        public void FindProductsById()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Щоб відмінити видалення введіть мінусове число");
+            int indexProduct;
+            do
+            {
+                Console.WriteLine("Введіть код продукта: ");
+                if (int.TryParse(Console.ReadLine(), out indexProduct))
+                {
+                    break;
+                }
+                else
+                    Console.WriteLine("Потрібно ввести хоть якесь число!");
+            }
+            while (indexProduct != -1);
+            Product findProduct = storageCRUD.FindProductsById(indexProduct).Result;
+            if (findProduct != null)
+            {
+                Console.WriteLine("По такому ID продукта нема");
+            }
+            else
+            {
+                Console.WriteLine(findProduct);
+            }
         }
     }
 }
