@@ -8,8 +8,8 @@ namespace GroupProject.DTO.Enums
 {
     public enum MeatType
     {
-        Pork,
-        Lamb,
-        Chicken
+        Pork = 1,
+        Lamb = 2,
+        Chicken = 3
     }
 }

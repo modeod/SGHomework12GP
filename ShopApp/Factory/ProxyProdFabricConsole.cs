@@ -11,52 +11,38 @@ namespace ShopApp.Factory
 {
     public class ProxyProdFabricConsole : IProxyProdFabric
     {
-        Type productTypeToCreate;
+        public Type ProductTypeToCreate { get; private set; }
 
         public ProxyProdFabricConsole()
         {
-            productTypeToCreate = null;
+            ProductTypeToCreate = null;
         }
 
         public Type ChooseProductType()
         {
-            try
+            uint res;
+            do
             {
-                uint res;
-                do
-                {
-                    Console.WriteLine("Product Type (0 - Food, 1 - Meat, 2 - Vehicle): ");
-                    string input = Console.ReadLine();
-                    res = Convert.ToUInt32(input);
-                }
-                while (res > 2 || res < 0);
-
-                switch (res)
-                {
-                    case 0:
-                        productTypeToCreate = typeof(FoodProductDTO);
-                        return typeof(FoodProductDTO);
-                    case 1:
-                        productTypeToCreate = typeof(MeatDTO);
-                        return typeof(MeatDTO);
-                    case 2:
-                        productTypeToCreate = typeof(NonFoodProductDTO);
-                        return typeof(NonFoodProductDTO);
-
-                    default:
-                        Console.WriteLine("Incorrect number. Try again.");
-                        return ChooseProductType();
-                }
+                Console.WriteLine("Product Type (1 - Food, 2 - Meat, 3 - Vehicle): ");
+                string input = Console.ReadLine();
+                if (!uint.TryParse(input, out res)) { continue; }
             }
-            catch (FormatException)
+            while (res > 3 || res < 1);
+            switch (res)
             {
-                Console.WriteLine("Incorrect formatting.");
-                return ChooseProductType();
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return ChooseProductType();
+                case 1:
+                    ProductTypeToCreate = typeof(FoodProductDTO);
+                    return typeof(FoodProductDTO);
+                case 2:
+                    ProductTypeToCreate = typeof(MeatDTO);
+                    return typeof(MeatDTO);
+                case 3:
+                    ProductTypeToCreate = typeof(NonFoodProductDTO);
+                    return typeof(NonFoodProductDTO);
+
+                default:
+                    Console.WriteLine("Incorrect number.");
+                    return null;
             }
         }
 
@@ -67,11 +53,9 @@ namespace ShopApp.Factory
             types[typeof(MeatDTO)] = () => CreateProductMeat();
             types[typeof(NonFoodProductDTO)] = () => CreateProductNonProduct();
 
-            Type productType = ChooseProductType();
-
-            if (types.Keys.Contains(productType))
+            if (types.Keys.Contains(ProductTypeToCreate))
             {
-                return types[productType]?.Invoke();
+                return types[ProductTypeToCreate]?.Invoke();
             }
 
             throw new ArgumentNullException();

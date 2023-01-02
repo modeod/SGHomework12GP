@@ -8,8 +8,8 @@ namespace GroupProject.DTO.Enums
 {
     public enum Currency
     {
-        UAH,
-        USD,
-        EUR
+        UAH = 1,
+        USD = 2,
+        EUR = 3
     }
 }
