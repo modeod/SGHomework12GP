@@ -80,6 +80,9 @@ namespace ShopApp.UI
                         Console.WriteLine(">>> Дякуємо, що завiтали до нас! <<<");
                         Console.ResetColor();
                         return;
+                    default:
+                        Console.WriteLine("Введіть число зі списку.");
+                        break;
                 }
 
             }
@@ -87,45 +90,67 @@ namespace ShopApp.UI
         }
         public void GetMyOrders()
         {
-            //TODO change user ID
-            var myOrders = orderService.GetAll().Result.Where(x => x.UserId == 0);
-            foreach (var item in myOrders)
+            try
             {
-                decimal totalPrice = 0;
-                Console.WriteLine($"Дата замовлення:{item.OrderedAt}");
-                foreach (var orderItem in item.OrderItems)
+                //TODO change user ID
+                var myOrders = orderService.GetAll().Result.Where(x => x.UserId == 0);
+                foreach (var item in myOrders)
                 {
-                    Console.WriteLine($"{orderItem.Product.Name}............{orderItem.Amount} шт. {orderItem.PriceWithSale}");
-                    totalPrice += orderItem.PriceWithSale;
+                    decimal totalPrice = 0;
+                    Console.WriteLine($"Дата замовлення:{item.OrderedAt}");
+                    foreach (var orderItem in item.OrderItems)
+                    {
+                        Console.WriteLine($"{orderItem.Product.Name}............{orderItem.Amount} шт. {orderItem.PriceWithSale}");
+                        totalPrice += orderItem.PriceWithSale;
+                    }
+                    Console.WriteLine($"Вартість: {totalPrice}");
+                    Console.WriteLine(new String('=', 50));
                 }
-                Console.WriteLine($"Вартість: {totalPrice}");
-                Console.WriteLine(new String('=', 50));
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("У Вас не має створених замовлень.");
             }
         }
 
         public void ShowListOfProducts()
         {
-            var products = storage.ReadProducts().Result;
-            foreach (var product in products)
+            try
             {
-                ShowProduct(product);
-                Console.WriteLine(new string('-', 30));
+                var products = storage.ReadProducts().Result;
+                foreach (var product in products)
+                {
+                    ShowProduct(product);
+                    Console.WriteLine(new string('-', 30));
+                }
+            }
+            catch(NullReferenceException)
+            {
+                Console.WriteLine("Продуктiв не знайдено.");
             }
         }
 
         public Product? FindProductsById(int id)
         {
-             var product = storage.FindProductsById(id).Result;
-            if (product is null)
+            try
             {
-                Console.WriteLine("Продуктiв з таким номером не знайдено.");
+                var product = storage.FindProductsById(id).Result;
+                if (product is null)
+                {
+                    Console.WriteLine("Продуктiв з таким номером не знайдено.");
+                }
+                else
+                {
+                    ShowProduct(product);
+                    Console.WriteLine(new string('-', 30));
+                }
+                return product;
             }
-            else
+            catch(Exception) 
             {
-                ShowProduct(product);
-                Console.WriteLine(new string('-', 30));
+                Console.WriteLine("Продукт з таким номером не знайдено.");
             }
-            return product;
+            return null;
         }
        
         private void ShowProduct(Product product)
