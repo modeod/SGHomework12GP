@@ -19,25 +19,28 @@ namespace ShopApp.PaymentService
             this.payment = payment;
         }
 
-        public IPayment ChoosePayment()
+        public IPayment ChoosePaymentSystem()
         {
             Console.WriteLine("1 - Платити готівкою");
             Console.WriteLine("2 - Платити карткою");
+
             int menuCount;
             do
             {
-                if (int.TryParse(Console.ReadLine(), out menuCount))
+                Console.WriteLine("Введіть ваш вибір: ");
+                if (!int.TryParse(Console.ReadLine(), out menuCount))
                 {
-                    Console.WriteLine("Введість число меню!");
+                    Console.WriteLine("Потрібно ввести хоть якесь число!");
+                    continue;
                 }
                 else 
-                if (menuCount < 0 && menuCount > 2)
+                if (menuCount < 1  || menuCount > 2)
                 {
                     Console.WriteLine("Введіть дані числа меню!");
                 }
-
             } 
-            while (menuCount < 0);
+            while (menuCount < 1 || menuCount > 2);
+
             switch (menuCount)
             {
                 case 1:
@@ -56,6 +59,7 @@ namespace ShopApp.PaymentService
 
         public bool Pay(uint _amount)
         {
+            payment = ChoosePaymentSystem();
             return payment.Pay(_amount);
         }
     }
