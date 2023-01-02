@@ -32,7 +32,7 @@ namespace GroupProject.factory
                     string input = Console.ReadLine();
                     res = Convert.ToUInt32(input);
                 }
-                while (res > 2 && res < 0);
+                while (res > 2 || res < 0);
                 return (MeatType)res;
             }
             catch (FormatException)
@@ -54,11 +54,11 @@ namespace GroupProject.factory
                 uint res;
                 do
                 {
-                    Console.WriteLine("Meat sort ( 0 - First, 1 - Second): ");
+                    Console.WriteLine("Meat Sort ( 0 - First, 1 - Second): ");
                     string input = Console.ReadLine();
                     res = Convert.ToUInt32(input);
                 }
-                while (res > 1 && res < 0);
+                while (res > 1 || res < 0);
                 return (MeatSort)res;
             }
             catch (FormatException)

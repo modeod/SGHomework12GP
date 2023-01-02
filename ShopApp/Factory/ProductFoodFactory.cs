@@ -20,19 +20,18 @@ namespace GroupProject.factory
         }
 
 
-        private DateOnly GetExpiryDate()
+        private DateTime GetExpiryDate()
         {
             try
             {
-                string format = "dd.MM.yyyy";
-                DateOnly res;
+                DateTime res;
                 do
                 {
-                    Console.WriteLine("Enter expiry date (Format: DD.MM.YYYY): ");
+                    Console.WriteLine("Enter expiry date (Format: DD.MM.YYYY HH:MM:SS in 24-hour clock time): ");
                     string input = Console.ReadLine();
-                    res = DateOnly.ParseExact(input, format, CultureInfo.InvariantCulture);
+                    DateTime.TryParse(input, out res);
                 }
-                while (res <= DateOnly.FromDateTime(DateTime.Now.Date));
+                while (res <= DateTime.Now.Date);
                 return res;
             }
             catch (FormatException)

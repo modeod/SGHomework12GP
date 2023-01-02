@@ -113,7 +113,7 @@ namespace GroupProject.factory
                     string input = Console.ReadLine();
                     res = Convert.ToUInt32(input);
                 }
-                while (res > 3 && res < 0);
+                while (res > 3 || res < 0);
                 return (Weight)res;
             }
             catch (FormatException)
@@ -139,7 +139,7 @@ namespace GroupProject.factory
                     string input = Console.ReadLine();
                     res = Convert.ToUInt32(input);
                 }
-                while (res > 2 && res < 0);
+                while (res > 2 || res < 0);
                 return (Currency)res;
             }
             catch (FormatException)
@@ -165,7 +165,7 @@ namespace GroupProject.factory
                     string input = Console.ReadLine();
                     res = Convert.ToUInt32(input);
                 }
-                while (res > 3 && res < 0);
+                while (res > 2 || res < 0);
                 return (ProdType)res;
             }
             catch (FormatException)
