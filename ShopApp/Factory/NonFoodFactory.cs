@@ -10,7 +10,7 @@ namespace GroupProject.factory
 {
     public class NonFoodFactory : ProductFactory
     {
-        public new ProductDTO CreateProduct()
+        public new NonFoodProductDTO CreateProduct()
         {
             var product = base.CreateProduct();
             var description = GetDescription();
@@ -19,6 +19,7 @@ namespace GroupProject.factory
         }
         public static string GetDescription()
         {
+            Console.WriteLine("Enter product description: ");
             return Console.ReadLine() ?? "";
         }
     }

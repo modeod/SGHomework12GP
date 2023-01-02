@@ -8,8 +8,8 @@ namespace GroupProject.DTO.Enums
 {
     public enum ProdType
     {
-        Food,
-        Meat,
-        Vehicle
+        Food = 1,
+        Meat = 2,
+        Vehicle = 3
     }
 }
