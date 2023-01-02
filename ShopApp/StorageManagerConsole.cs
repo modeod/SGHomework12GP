@@ -1,5 +1,7 @@
 ﻿using GroupProject.DTO;
+using GroupProject.DTO.Enums;
 using Microsoft.EntityFrameworkCore;
+using ShopApp.DTO.MappingExtensions;
 using ShopApp.Entities.ProductEntity;
 using ShopApp.Interface;
 using ShopApp.PaymentService;
@@ -83,7 +85,48 @@ namespace ShopApp
  
         public void CreateProduct()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Створення продукта");
+            Type typeProduct = prodFabric.ChooseProductType();
+            ProductDTO newProductDTO = prodFabric.CreateProduct();
+            Product generalProduct;
+            if (newProductDTO is NonFoodProductDTO nonFoodProductDTO)
+            {
+                generalProduct = nonFoodProductDTO.MapToProduct();
+            }
+            else if (newProductDTO is MeatDTO meatDTO)
+            {
+                generalProduct = meatDTO.MapToProduct();
+            }
+            else if (newProductDTO is FoodProductDTO foodProductDTO)
+            {
+                generalProduct = foodProductDTO.MapToProduct();
+            }
+            else 
+                throw
+                    new ArgumentException("Не правильно створена фабрика");
+            try
+            {
+                if (storageCRUD.CreateProduct(generalProduct).Result != null)
+                {
+                    Console.WriteLine("Продукт створений");
+                }
+            }
+            catch (OperationCanceledException ex)
+            {
+                Console.WriteLine("Операція створення аварійно зупинена " + ex.Message);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine("Аргумент має NULL значення " + ex.Message);
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine("Помилка добавлення в репозиторій " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Помилка створення продукту " + ex.Message);
+            }
         }
 
         public void DeleteProduct()
