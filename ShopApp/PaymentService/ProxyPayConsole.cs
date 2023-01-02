@@ -26,18 +26,18 @@ namespace ShopApp.PaymentService
             int menuCount;
             do
             {
-                if (int.TryParse(Console.ReadLine(), out menuCount))
+                if (!int.TryParse(Console.ReadLine(), out menuCount))
                 {
-                    Console.WriteLine("Введість число меню!");
+                    Console.WriteLine("Потрібно ввести хоть якесь число!");
+                    menuCount = -1;
                 }
                 else 
-                if (menuCount < 0 && menuCount > 2)
+                if (menuCount < 1  && menuCount > 2)
                 {
                     Console.WriteLine("Введіть дані числа меню!");
                 }
-
             } 
-            while (menuCount < 0);
+            while (menuCount < 1 && menuCount > 2);
             switch (menuCount)
             {
                 case 1:
