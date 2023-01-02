@@ -16,11 +16,12 @@ namespace GroupProject.factory
             var name = Input.GetName();
             var productType = Input.GetProductType();
             var price = Input.GetPrice();
+            var amount = Input.GetProductAmount();
             var weight = Input.GetWeight();
             var weightUnit = Input.GetWeightUnits();
             var currency = Input.GetCurrency();
 
-            return new ProductDTO(name, productType, price, weightUnit, weight, currency);
+            return new ProductDTO(name, productType, price, amount, weightUnit, weight, currency);
         }
     }
 }

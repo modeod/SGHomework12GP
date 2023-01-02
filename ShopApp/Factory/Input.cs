@@ -26,31 +26,28 @@ namespace GroupProject.factory
             try
             {
                 uint res = Convert.ToUInt32(input);
-                if (res != null)
+                switch (res)
                 {
-                    switch (res)
-                    {
-                        case 0:
-                            return (ProdType)0;
-                            break;
+                    case 0:
+                        return (ProdType)0;
+                    case 1:
+                        return (ProdType)1;
+                    case 2:
+                        return (ProdType)2;
 
-                        case 1:
-                            return (ProdType)1;
-                            break;
-
-                        case 2:
-                            return (ProdType)2;
-                            break;
-                        default:
-                            return GetProductType();
-                    }
+                    default:
+                        Console.WriteLine("Wrong number.");
+                        return GetProductType();
                 }
-                Console.WriteLine("Wrong number.");
-                return GetProductType();
             }
             catch(FormatException)
             {
                 Console.WriteLine("Incorrect formatting.");
+                return GetProductType();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
                 return GetProductType();
             }
         }
@@ -62,12 +59,18 @@ namespace GroupProject.factory
                 Console.WriteLine("Enter product price: ");
                 decimal res = Convert.ToDecimal(Console.ReadLine());
 
-                if (res != null && res > 0) { return res; }
+                if (res > 0) { return res; }
+                Console.WriteLine("Price cannot be negative.");
                 return GetPrice();
             }
             catch (FormatException)
             {
                 Console.WriteLine("Incorrect formatting.");
+                return GetPrice();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
                 return GetPrice();
             }
         }
@@ -79,12 +82,17 @@ namespace GroupProject.factory
                 Console.WriteLine("Enter product weight: ");
                 double res = Convert.ToDouble(Console.ReadLine());
 
-                if (res != null && res > 0) { return res; }
+                if (res > 0) { return res; }
                 return GetWeight();
             }
             catch (FormatException)
             {
                 Console.WriteLine("Incorrect formatting.");
+                return GetWeight();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
                 return GetWeight();
             }
         }
@@ -97,36 +105,30 @@ namespace GroupProject.factory
             try
             {
                 uint res = Convert.ToUInt32(input);
-                if (res != null)
+                switch (res)
                 {
-                    switch (res)
-                    {
-                        case 0:
-                            return (Weight)0;
-                            break;
-
-                        case 1:
-                            return (Weight)1;
-                            break;
-
-                        case 2:
-                            return (Weight)2;
-                            break;
+                    case 0:
+                        return (Weight)0;
+                    case 1:
+                        return (Weight)1;
+                    case 2:
+                        return (Weight)2;
+                    case 3:
+                        return (Weight)3;
                         
-                        case 3:
-                            return (Weight)3;
-                            break;
-                        
-                        default:
-                            return GetWeightUnits();
-                    }
+                    default:
+                        Console.WriteLine("Wrong number.");
+                        return GetWeightUnits();
                 }
-                Console.WriteLine("Wrong number.");
-                return GetWeightUnits();
             }
             catch (FormatException)
             {
                 Console.WriteLine("Incorrect formatting.");
+                return GetWeightUnits();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
                 return GetWeightUnits();
             }
         }
@@ -139,30 +141,28 @@ namespace GroupProject.factory
             try
             {
                 uint res = Convert.ToUInt32(input);
-                if (res != null)
+                switch (res)
                 {
-                    switch (res)
-                    {
-                        case 0:
-                            return (Currency)0;
-                            break;
+                    case 0:
+                        return (Currency)0;
+                    case 1:
+                        return (Currency)1;
+                    case 2:
+                        return (Currency)2;
 
-                        case 1:
-                            return (Currency)1;
-                            break;
-
-                        case 2:
-                            return (Currency)2;
-                            break;
-                        default:
-                            return GetCurrency();
-                    }
+                    default:
+                        Console.WriteLine("Wrong number.");
+                        return GetCurrency();
                 }
-                return GetCurrency();
             }
             catch (FormatException)
             {
                 Console.WriteLine("Incorrect formatting.");
+                return GetCurrency();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
                 return GetCurrency();
             }
         }
@@ -177,7 +177,7 @@ namespace GroupProject.factory
 
                 DateOnly res = DateOnly.ParseExact(input, format, CultureInfo.InvariantCulture);
 
-                if (res != null && res > DateOnly.FromDateTime(DateTime.Now.Date)) { return res; }
+                if (res > DateOnly.FromDateTime(DateTime.Now.Date)) { return res; }
                 Console.WriteLine("Incorrect inputed date.");
                 return GetExpiryDate();
             }
@@ -196,31 +196,27 @@ namespace GroupProject.factory
             try
             {
                 uint res = Convert.ToUInt32(input);
-                if (res != null)
+                switch (res)
                 {
-                    switch (res)
-                    {
-                        case 0:
-                            return (MeatType)0;
-                            break;
+                    case 0:
+                        return (MeatType)0;
+                    case 1:
+                        return (MeatType)1;
+                    case 2:
 
-                        case 1:
-                            return (MeatType)1;
-                            break;
-
-                        case 2:
-                            return (MeatType)2;
-                            break;
-                        default:
-                            return GetMeatType();
-                    }
+                    default:
+                        Console.WriteLine("Wrong number.");
+                        return GetMeatType();
                 }
-                Console.WriteLine("Wrong number.");
-                return GetMeatType();
             }
             catch (FormatException)
             {
                 Console.WriteLine("Incorrect formatting.");
+                return GetMeatType();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
                 return GetMeatType();
             }
         }
@@ -233,28 +229,26 @@ namespace GroupProject.factory
             try
             {
                 uint res = Convert.ToUInt32(input);
-                if (res != null)
+                switch (res)
                 {
-                    switch (res)
-                    {
-                        case 0:
-                            return (MeatSort)0;
-                            break;
+                    case 0:
+                        return (MeatSort)0;
+                    case 1:
+                        return (MeatSort)1;
 
-                        case 1:
-                            return (MeatSort)1;
-                            break;
-
-                        default:
-                            return GetMeatSort();
-                    }
+                    default:
+                        Console.WriteLine("Wrong number.");
+                        return GetMeatSort();
                 }
-                Console.WriteLine("Wrong number.");
-                return GetMeatSort();
             }
             catch (FormatException)
             {
                 Console.WriteLine("Incorrect formatting.");
+                return GetMeatSort();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
                 return GetMeatSort();
             }
         }
@@ -262,6 +256,26 @@ namespace GroupProject.factory
         public static string GetDescription()
         {
             return Console.ReadLine();
+        }
+
+        public static uint GetProductAmount()
+        {
+            try
+            {
+                Console.WriteLine("Enter product amount: ");
+                uint res = Convert.ToUInt32(Console.ReadLine());
+                return res;
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Incorrect formatting.");
+                return GetProductAmount();
+            }
+            catch (OverflowException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return GetProductAmount();
+            }
         }
     }
 }

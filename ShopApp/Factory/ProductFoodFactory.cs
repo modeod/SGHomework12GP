@@ -13,14 +13,14 @@ namespace GroupProject.factory
         public ProductDTO CreateProduct()
         {
             var name = Input.GetName();
-            var productType = Input.GetProductType();
             var price = Input.GetPrice();
+            var amount = Input.GetProductAmount();
             var weight = Input.GetWeight();
             var weightUnit = Input.GetWeightUnits();
             var currency = Input.GetCurrency();
             var expiryDate = Input.GetExpiryDate();
 
-            return new FoodProductDTO(name, productType, price, weightUnit, weight, currency, expiryDate);
+            return new FoodProductDTO(name, DTO.Enums.ProdType.Food, price, amount, weightUnit, weight, currency, expiryDate);
         }
     }
 }

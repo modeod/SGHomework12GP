@@ -13,8 +13,8 @@ namespace GroupProject.factory
         public ProductDTO CreateProduct()
         {
             var name = Input.GetName();
-            var productType = Input.GetProductType();
             var price = Input.GetPrice();
+            var amount = Input.GetProductAmount();
             var weight = Input.GetWeight();
             var weightUnit = Input.GetWeightUnits();
             var currency = Input.GetCurrency();
@@ -22,7 +22,7 @@ namespace GroupProject.factory
             var meatType = Input.GetMeatType();
             var meatTSort = Input.GetMeatSort();
 
-            return new MeatDTO(name, productType, price, weightUnit, weight, currency, expiryDate, meatTSort, meatType);
+            return new MeatDTO(name, DTO.Enums.ProdType.Meat, price, amount, weightUnit, weight, currency, expiryDate, meatTSort, meatType);
         }
     }
 }
