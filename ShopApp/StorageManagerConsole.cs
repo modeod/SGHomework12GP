@@ -162,7 +162,7 @@ namespace ShopApp
             }
             catch (OperationCanceledException ex)
             {
-                Console.WriteLine("Операція створення аварійно зупинена " + ex.Message);
+                Console.WriteLine("Операція видалення аварійно зупинена " + ex.Message);
             }
             catch (ArgumentNullException ex)
             {
@@ -170,11 +170,11 @@ namespace ShopApp
             }
             catch (DbUpdateException ex)
             {
-                Console.WriteLine("Помилка добавлення в репозиторій " + ex.Message);
+                Console.WriteLine("Помилка видалення в репозиторію " + ex.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Помилка створення продукту " + ex.Message);
+                Console.WriteLine("Помилка видалення " + ex.Message);
             }
         }
 
@@ -207,14 +207,14 @@ namespace ShopApp
             {
                 foreach (Product product in listProduct)
                 {
-                    Console.WriteLine(product.ToString());
+                    Console.WriteLine(ToStringProduct(product));
                 }
             }
         }
         public void UpdateProduct()
         {
             Product generalProduct;
-            Console.WriteLine("Щоб відмінити видалення введіть мінусове число");
+            Console.WriteLine("Щоб відмінити оновлення введіть мінусове число");
             int indexProduct;
             do
             {
@@ -255,12 +255,12 @@ namespace ShopApp
             {
                 if (storageCRUD.UpdateProduct(generalProduct).Result != null)
                 {
-                    Console.WriteLine("Продукт створений");
+                    Console.WriteLine("Продукт оновлений");
                 }
             }
             catch (OperationCanceledException ex)
             {
-                Console.WriteLine("Операція створення аварійно зупинена " + ex.Message);
+                Console.WriteLine("Операція оновлення аварійно зупинена " + ex.Message);
             }
             catch (ArgumentNullException ex)
             {
@@ -268,11 +268,11 @@ namespace ShopApp
             }
             catch (DbUpdateException ex)
             {
-                Console.WriteLine("Помилка добавлення в репозиторій " + ex.Message);
+                Console.WriteLine("Помилка оновлення продукту в репозиторію " + ex.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Помилка створення продукту " + ex.Message);
+                Console.WriteLine("Помилка оновлення " + ex.Message);
             }
         }
 
@@ -292,17 +292,17 @@ namespace ShopApp
             }
             while (indexProduct != -1);
             Product findProduct = storageCRUD.FindProductsById(indexProduct).Result;
-            if (findProduct != null)
+            if (findProduct == null)
             {
                 Console.WriteLine("По такому ID продукта нема");
             }
             else
             {
-                Console.WriteLine(findProduct.ToString());
+                Console.WriteLine(ToStringProduct(findProduct));
             }
         }
 
-        static private string ToString(this Product product)
+        private string ToStringProduct(Product product)
         {
             string result = "";
             result += product.VendorCode+" | ";
