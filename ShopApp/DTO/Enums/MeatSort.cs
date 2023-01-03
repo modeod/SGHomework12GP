@@ -8,7 +8,7 @@ namespace GroupProject.DTO.Enums
 {
     public enum MeatSort
     {
-        First = 1,
-        Second = 2
+        First = 0,
+        Second = 1
     }
 }

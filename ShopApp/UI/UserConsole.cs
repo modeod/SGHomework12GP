@@ -156,7 +156,7 @@ namespace ShopApp.UI
         private void ShowProduct(Product product)
         {
             Console.WriteLine($"{product.Name}:\nОпис: {product.Description}");
-            Console.WriteLine($"Виробник: {product.Manufacter.Title}");
+            /*Console.WriteLine($"Виробник: {product.Manufacter.Title}");*/
         }
 
         public void UpdateCurrentOrder(Product product, int amount)

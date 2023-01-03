@@ -8,9 +8,9 @@ namespace GroupProject.DTO.Enums
 {
     public enum Weight
     {
-        G = 1,
-        KG = 2,
-        L = 3,
-        ML = 4
+        G = 0,
+        KG = 1,
+        L = 2,
+        ML = 3
     }
 }
