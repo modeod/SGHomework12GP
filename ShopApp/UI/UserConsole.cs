@@ -3,23 +3,20 @@ using ShopApp.Entities.OrderItemEntity;
 using ShopApp.Entities.ProductEntity;
 using ShopApp.Interface;
 using ShopApp.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ShopApp.UI
 {
-    internal class UserConsole
+    public class UserConsole
     {
         private IReadStorage storage;
         private IUserOrder orderService;
         private IProxyPay payment;
         private int userId;
+        private bool isOrederApplyed = false;
         public Order CurrentOrder { get; set; }
 
-        public UserConsole(int userId,IReadStorage storage, IUserOrder orderService, IProxyPay payment, Order currentOrder)
+        public UserConsole(int userId, IReadStorage storage, IUserOrder orderService, IProxyPay payment, Order currentOrder)
         {
             this.storage = storage;
             this.orderService = orderService;
@@ -27,7 +24,7 @@ namespace ShopApp.UI
             CurrentOrder = currentOrder;
             this.userId = userId;
         }
-        public void ShowMenu()
+        async public void ShowMenuAsync()
         {
             Console.BackgroundColor = ConsoleColor.Green;
             Console.WriteLine(">>> Вiтаємо у нашому магазинi та бажаємо приємних покупок! <<<");
@@ -45,14 +42,14 @@ namespace ShopApp.UI
                 int choose;
                 try
                 {
-                   choose = Convert.ToInt32(Console.ReadLine());
+                    choose = Convert.ToInt32(Console.ReadLine());
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     choose = 0;
                 }
                 switch (choose)
-                { 
+                {
                     case 1:
                         Console.Clear();
                         ShowListOfProducts();
@@ -60,8 +57,12 @@ namespace ShopApp.UI
                     case 2:
                         Console.Clear();
                         Console.WriteLine("Введiть номер продукта для пошуку:");
-                        int productNumber=Convert.ToInt32(Console.ReadLine());
-                        FindProductsById(productNumber);
+                        if (Int32.TryParse(Console.ReadLine(), out int productNumber))
+                        {
+                            FindProductsById(productNumber);
+                            break;
+                        }
+                        Console.WriteLine("Некорректний номер продукту.");
                         break;
                     case 3:
                         Console.Clear();
@@ -70,10 +71,16 @@ namespace ShopApp.UI
                     case 4:
                         Console.Clear();
                         Console.WriteLine("Введiть номер продукту, який бажаєте додати до замовлення:");
-                        productNumber=Convert.ToInt32(Console.ReadLine());
-                        Console.WriteLine("Введiть кiлькiсть продуктiв, який бажаєте додати до замовлення:");
-                        int amount=Convert.ToInt32(Console.ReadLine());
-                        UpdateCurrentOrder(FindProductsById(productNumber),amount);
+                        if (Int32.TryParse(Console.ReadLine(), out productNumber))
+                        {
+                            Console.WriteLine("Введiть кiлькiсть продуктiв, який бажаєте додати до замовлення:");
+                            if (Int32.TryParse(Console.ReadLine(), out int amount))
+                            {
+                                UpdateCurrentOrder(await FindProductsById(productNumber), amount);
+                                break;
+                            }
+                        }
+                        Console.WriteLine("Некорректний номер продукту або його кiлькiсть");
                         break;
                     case 5:
                         Console.Clear();
@@ -81,7 +88,7 @@ namespace ShopApp.UI
                         break;
                     case 6:
                         Console.Clear();
-                        ApplyPayment();
+                        ApplyPayment(CurrentOrder.OrderItems.Sum(x => x.Product.Price * x.Amount));
                         break;
                     case 7:
                         Console.Clear();
@@ -97,11 +104,11 @@ namespace ShopApp.UI
             }
 
         }
-        public void GetMyOrders()
+        async public void GetMyOrders()
         {
             try
             {
-                var myOrders = orderService.GetAll().Result.Where(x => x.UserId == userId);
+                var myOrders = (await orderService.GetAll()).Where(x => x.UserId == userId);
                 foreach (var item in myOrders)
                 {
                     decimal totalPrice = 0;
@@ -115,34 +122,34 @@ namespace ShopApp.UI
                     Console.WriteLine(new String('=', 50));
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 Console.WriteLine("У Вас не має створених замовлень.");
             }
         }
 
-        public void ShowListOfProducts()
+        async public void ShowListOfProducts()
         {
             try
             {
-                var products = storage.ReadProducts().Result;
+                var products = await storage.ReadProducts();
                 foreach (var product in products)
                 {
                     ShowProduct(product);
                     Console.WriteLine(new string('-', 30));
                 }
             }
-            catch(NullReferenceException)
+            catch (NullReferenceException)
             {
                 Console.WriteLine("Продуктiв не знайдено.");
             }
         }
 
-        public Product? FindProductsById(int id)
+        async public Task<Product?> FindProductsById(int id)
         {
             try
             {
-                var product = storage.FindProductsById(id).Result;
+                var product = await storage.FindProductsById(id);
                 if (product is null)
                 {
                     Console.WriteLine("Продуктiв з таким номером не знайдено.");
@@ -154,13 +161,13 @@ namespace ShopApp.UI
                 }
                 return product;
             }
-            catch(Exception) 
+            catch (Exception)
             {
                 Console.WriteLine("Продукт з таким номером не знайдено.");
             }
             return null;
         }
-       
+
         private void ShowProduct(Product product)
         {
             Console.WriteLine($"{product.Name} {product.Price}\nОпис: {product.Description}");
@@ -168,12 +175,12 @@ namespace ShopApp.UI
 
         public void UpdateCurrentOrder(Product product, int amount)
         {
-            if(product is null || amount<=0)
+            if (product is null || amount <= 0)
             {
-                Console.WriteLine("Iнформацiя про товар або кiлькi сть введено неправильно.");
+                Console.WriteLine("Iнформацiя про товар або кiлькiсть введено неправильно.");
                 return;
             }
-            if(CurrentOrder is null)
+            if (CurrentOrder is null)
             {
                 CurrentOrder = new Order();
             }
@@ -188,30 +195,32 @@ namespace ShopApp.UI
 
         }
 
-        public void ApplyOrder()
+        async public void ApplyOrder()
         {
-            if(CurrentOrder is null)
+            if (CurrentOrder is null || CurrentOrder.OrderItems.Count == 0)
             {
-                CurrentOrder= new Order();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Виникли помилки при створеннi замовлення. Замовлення порожнє.");
+                Console.ResetColor();
+                return;
             }
-            CurrentOrder.OrderedAt = DateTime.Now;
-            if (orderService.CreateOrder(CurrentOrder).Result is not null)
+            if (await orderService.CreateOrder(CurrentOrder) is not null)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Замовлення вдало створено.");
                 Console.ResetColor();
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Виникли помилки при створеннi замовлення.");
-                Console.ResetColor();
+                isOrederApplyed = true;
+                CurrentOrder.OrderedAt = DateTime.Now;
             }
         }
 
-        public void ApplyPayment()
+        public void ApplyPayment(decimal amount)
         {
-            payment.ChoosePaymentSystem();
+            if (isOrederApplyed)
+                payment.Pay(amount);
+            else
+                Console.WriteLine("Замовлення не пiдтверджено.");
         }
     }
 }
+
