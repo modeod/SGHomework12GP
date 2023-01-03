@@ -16,15 +16,16 @@ namespace ShopApp.UI
         private IReadStorage storage;
         private IUserOrder orderService;
         private IProxyPay payment;
-
+        private int userId;
         public Order CurrentOrder { get; set; }
 
-        public UserConsole(IReadStorage storage, IUserOrder orderService, IProxyPay payment, Order currentOrder)
+        public UserConsole(int userId,IReadStorage storage, IUserOrder orderService, IProxyPay payment, Order currentOrder)
         {
             this.storage = storage;
             this.orderService = orderService;
             this.payment = payment;
             CurrentOrder = currentOrder;
+            this.userId = userId;
         }
         public void ShowMenu()
         {
@@ -41,7 +42,15 @@ namespace ShopApp.UI
                 Console.WriteLine("5. Підтвердити поточне замовлення.".Replace('і', 'i'));
                 Console.WriteLine("6. Сплатити поточне замовлення.");
                 Console.WriteLine("7. Вихiд.");
-                int choose=Convert.ToInt32(Console.ReadLine());
+                int choose;
+                try
+                {
+                   choose = Convert.ToInt32(Console.ReadLine());
+                }
+                catch(Exception)
+                {
+                    choose = 0;
+                }
                 switch (choose)
                 { 
                     case 1:
@@ -92,8 +101,7 @@ namespace ShopApp.UI
         {
             try
             {
-                //TODO change user ID
-                var myOrders = orderService.GetAll().Result.Where(x => x.UserId == 0);
+                var myOrders = orderService.GetAll().Result.Where(x => x.UserId == userId);
                 foreach (var item in myOrders)
                 {
                     decimal totalPrice = 0;
@@ -155,8 +163,7 @@ namespace ShopApp.UI
        
         private void ShowProduct(Product product)
         {
-            Console.WriteLine($"{product.Name}:\nОпис: {product.Description}");
-            Console.WriteLine($"Виробник: {product.Manufacter.Title}");
+            Console.WriteLine($"{product.Name} {product.Price}\nОпис: {product.Description}");
         }
 
         public void UpdateCurrentOrder(Product product, int amount)
@@ -183,6 +190,10 @@ namespace ShopApp.UI
 
         public void ApplyOrder()
         {
+            if(CurrentOrder is null)
+            {
+                CurrentOrder= new Order();
+            }
             CurrentOrder.OrderedAt = DateTime.Now;
             if (orderService.CreateOrder(CurrentOrder).Result is not null)
             {
