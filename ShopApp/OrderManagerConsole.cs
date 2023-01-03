@@ -1,5 +1,11 @@
 ﻿using ShopApp.DTO;
+using ShopApp.DTO.Enums;
+using ShopApp.Entities.OrderEntity;
+using ShopApp.Entities.OrderItemEntity;
+using ShopApp.Entities.OrderStatusEntity;
+using ShopApp.Entities.ProductEntity;
 using ShopApp.Interface;
+using ShopApp.Repositories;
 using ShopApp.Repositories.Interfaces;
 
 namespace ShopApp
@@ -8,19 +14,87 @@ namespace ShopApp
     {
         protected readonly ICRUDOrders crudOrder;
         protected readonly IReadStorage readStorage;
+        protected readonly IUserRepository userRepository;
 
-        public OrderManagerConsole(ICRUDOrders crudOrder, IReadStorage readStorage)
+        public OrderManagerConsole(ICRUDOrders crudOrder, IReadStorage readStorage, IUserRepository userRepository)
         {
             this.crudOrder = crudOrder;
             this.readStorage = readStorage;
+            this.userRepository = userRepository;
         }
 
         public async Task CreateOrder()
         {
-            var orderToCreateDTO = new OrderDTO();
-            
-            //var createdOrder = await crudOrder.CreateOrder();
+            var orderToCreate = new Order();
+            var user = await userRepository.GetById(4);
+            if (user == null)
+            {
+                Console.WriteLine("Користувача не знайдено");
+                return;
+            }
 
+            Console.WriteLine("Створення замовлення...");
+
+            var allProducts = await readStorage.ReadProducts();
+            Console.WriteLine("Список всiх продуктiв: ");
+            foreach (var item in allProducts)
+            {
+                Console.WriteLine(ToStringProduct(item));
+            }
+            
+            Console.WriteLine("Виберiть необхiднi продукти (Vendor code)");
+            var userProductsVendorCode = Console.ReadLine();
+            
+            if (userProductsVendorCode == null || userProductsVendorCode.Length == 0 || userProductsVendorCode == "")
+            {
+                Console.WriteLine("Жоден продукт не вибрано");
+                return;
+            }
+            
+            var productsVendorCode = userProductsVendorCode?.Split(',', ' ');
+            int[] vendorCodeArr = new int[] { };
+            if (productsVendorCode == null || productsVendorCode.Length == 0)
+            {
+                Console.WriteLine("Жоден продукт не вибрано");
+            }
+            else
+            {
+                vendorCodeArr = Array.ConvertAll(productsVendorCode, s => int.TryParse(s, out var x) ? x : -1);
+            }
+            
+            foreach (var item in vendorCodeArr)
+            {
+                var productById = await readStorage.FindProductsById(item);
+                if (productById != null)
+                {
+                    var orderItem = new OrderItem()
+                    {
+                        ProductVendorCode = productById.VendorCode,
+                        PriceWithSale = productById.Price
+                    };
+
+                    Console.Write($"Введiть к-ть {productById.Name}: ") ;
+                    var isSuccess = int.TryParse(Console.ReadLine(), out var productCount);
+                    orderItem.Amount = isSuccess ? productCount : 1;
+
+                    orderToCreate.OrderItems.Add(orderItem);
+                    Console.WriteLine($"Продукт: {item} успiшно додано");
+                }
+                else
+                {
+                    Console.WriteLine($"Продукт: {item} не знайдено");
+                }
+            }
+
+            Console.Write("Введiть опис замовлення: ");
+            orderToCreate.Description = Console.ReadLine();
+            orderToCreate.UserId = user.Id;
+            orderToCreate.AddressId = user.AddressId;
+            orderToCreate.StatusId = (int)OrderStatuses.Pending;
+            orderToCreate.OrderedAt = DateTime.Now;
+
+            var createdOrder = await crudOrder.CreateOrder(orderToCreate);
+            Console.WriteLine("Замовлення успішно додано");
         }
         public async Task ReadOrders()
         {
@@ -46,7 +120,7 @@ namespace ShopApp
 
         }
 
-        public void ShowMenu()
+        public async Task ShowMenu()
         {
             Console.WriteLine("1 - Додати замовлення");
             Console.WriteLine("2 - Показати замовлення");
@@ -58,7 +132,7 @@ namespace ShopApp
             int menuCount;
             do
             {
-                Console.WriteLine("Введіть ваш вибір: ");
+                Console.WriteLine("Введiть ваш вибiр: ");
                 if (!int.TryParse(Console.ReadLine(), out menuCount))
                 {
                     Console.WriteLine("Потрібно ввести хоть якесь число!");
@@ -76,27 +150,27 @@ namespace ShopApp
             {
                 case 1:
                     {
-                        CreateOrder();
+                        await CreateOrder();
                         break;
                     }
                 case 2:
                     {
-                        ReadOrders();
+                        await ReadOrders();
                         break;
                     }
                 case 3:
                     {
-                        UpdateOrder();
+                        await UpdateOrder();
                         break;
                     }
                 case 4:
                     {
-                        DeleteOrder();
+                        await DeleteOrder();
                         break;
                     }
                 case 5:
                     {
-                        FindOrderById();
+                        await FindOrderById();
                         break;
                     }
                 case 6:
@@ -108,6 +182,24 @@ namespace ShopApp
                     throw
                         new Exception("Помилка меню.");
             }
+        }
+
+        private string ToStringProduct(Product product)
+        {
+            string result = "";
+            result += "VendorCode:" + product.VendorCode + " | ";
+            result += product.ProdType + " | ";
+            result += product.Name + " | ";
+            result += product.Description != null ? product.Description + " | " : "";
+            result += product.Amount + " | ";
+            result += product.WeightUnit + " | ";
+            result += product.Weight.ToString() + " | ";
+            result += product.Weight + " | ";
+            result += product.MeatSort != null ? product.MeatSort.ToString() + " | " : "";
+            result += product.MeatType != null ? product.MeatType.ToString() + " | " : "";
+            result += product.ExpiryDate != null ? product.ExpiryDate.ToString() + " | " : "";
+            result += product.Currency + " | ";
+            return result;
         }
     }
 }

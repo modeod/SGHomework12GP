@@ -9,6 +9,6 @@ namespace ShopApp.Interface
         Task UpdateOrder();
         Task DeleteOrder();
         Task FindOrderById();
-        void ShowMenu();
+        Task ShowMenu();
     }
 }
