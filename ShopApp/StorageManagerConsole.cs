@@ -274,20 +274,23 @@ namespace ShopApp
 
         private string ToStringProduct(Product product)
         {
-            string result = "";
-            result += "ID: "+ product.VendorCode+" | ";
-            result += product.Name + " | ";
-            result += "Тип продукту: " + product.ProdType.ToString() + " | ";
-            result += product.Description!=null? "Опис: "+product.Description + " | " : "";
-            result += "Кількість: "+product.Amount + " | ";
-            result += "Одиниці ваги: "+product.WeightUnit.ToString() + " | ";
-            result += "Вага: "+product.Weight.ToString() + " | ";
-            result += product.MeatSort != null ? "Сорт мяса: "+product.MeatSort.ToString() + " | " : "";
-            result += product.MeatType != null ? "Тип мяса: "+product.MeatType.ToString() + " | " : "";
-            result += product.ExpiryDate != null ? "Термін придатності: "+product.ExpiryDate.ToString() + " | " : "";
-            result += "Валюта: "+product.Currency + " | ";
-            result += "Ціна: "+product.Price + " | ";
-            return result;
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendFormat("ID: {0} | Назва продукту {1} | Тип продукту: {2} | Кількість: {3} | Одиниці ваги: {4} | Вага: {5} | Валюта: {6} | Ціна: {7} |", 
+                product.VendorCode, product.Name, product.ProdType.ToString(), product.Amount.ToString(), product.WeightUnit.ToString(), product.Weight.ToString(), product.Currency.ToString(), product.Price.ToString());
+
+            if (product.Description != null)
+            {
+                stringBuilder.AppendFormat(" Опис: {0}", product.Description.ToString());
+            }
+            if (product.MeatSort != null && product.MeatType != null)
+            {
+                stringBuilder.AppendFormat(" Сорт мяса: {0} | Тип мяса: {1} |", product.MeatSort.ToString(), product.MeatType.ToString());
+            }
+            if (product.ExpiryDate != null)
+            {
+                stringBuilder.AppendFormat(" Термін придатності: {0} |", product.ExpiryDate.ToString());
+            }
+            return stringBuilder.ToString();
         }
         private Product DTOtoProduct(Type typeProduct, ProductDTO productDTO)
         {
