@@ -14,7 +14,6 @@ namespace GroupProject.factory
         public ProductDTO CreateProduct()
         {
             var name = GetName();
-            var productType = GetProductType();
             var price = GetPrice();
             var amount = GetProductAmount();
             var weight = GetWeight();
@@ -22,7 +21,7 @@ namespace GroupProject.factory
             var currency = GetCurrency();
 
 
-            return new ProductDTO(0, name, productType, price, amount, weightUnit, weight, currency);
+            return new ProductDTO(0, name, DTO.Enums.ProdType.Product, price, amount, weightUnit, weight, currency);
         }
 
         private string GetName()
@@ -152,32 +151,6 @@ namespace GroupProject.factory
             {
                 Console.WriteLine(ex.Message);
                 return GetCurrency();
-            }
-        }
-
-        private ProdType GetProductType()
-        {
-            try
-            {
-                uint res;
-                do
-                {
-                    Console.WriteLine("Product Type ( 0 - Food, 1 - Meat, 2 - Vehicle): ");
-                    string input = Console.ReadLine();
-                    res = Convert.ToUInt32(input);
-                }
-                while (res > 2 || res < 0);
-                return (ProdType)res;
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Incorrect formatting.");
-                return GetProductType();
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return GetProductType();
             }
         }
     }

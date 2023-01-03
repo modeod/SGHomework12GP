@@ -10,6 +10,7 @@ namespace GroupProject.DTO.Enums
     {
         Food = 1,
         Meat = 2,
-        Vehicle = 3
+        NonFoodProduct = 3,
+        Product = 4
     }
 }
