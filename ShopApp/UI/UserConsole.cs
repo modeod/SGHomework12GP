@@ -1,6 +1,7 @@
 ﻿using ShopApp.Entities.OrderEntity;
 using ShopApp.Entities.OrderItemEntity;
 using ShopApp.Entities.ProductEntity;
+using ShopApp.Facade;
 using ShopApp.Interface;
 using ShopApp.Repositories.Interfaces;
 
@@ -12,16 +13,19 @@ namespace ShopApp.UI
         private IReadStorage storage;
         private IUserOrder orderService;
         private IProxyPay payment;
+        private ConsoleHandler consoleHandler;
         private int userId;
         private bool isOrederApplyed = false;
         public Order CurrentOrder { get; set; }
 
-        public UserConsole(int userId, IReadStorage storage, IUserOrder orderService, IProxyPay payment, Order currentOrder)
+        public UserConsole(int userId, IReadStorage storage,
+            IUserOrder orderService, IProxyPay payment, Order currentOrder, ConsoleHandler consoleHandler)
         {
             this.storage = storage;
             this.orderService = orderService;
             this.payment = payment;
             CurrentOrder = currentOrder;
+            this.consoleHandler = consoleHandler;
             this.userId = userId;
         }
         async public Task ShowMenuAsync()
@@ -95,7 +99,8 @@ namespace ShopApp.UI
                         Console.BackgroundColor = ConsoleColor.Green;
                         Console.WriteLine(">>> Дякуємо, що завiтали до нас! <<<");
                         Console.ResetColor();
-                        return;
+                        await consoleHandler.ConfigureWorkWithSystem();
+                        break;
                     default:
                         Console.WriteLine("Введіть число зі списку.");
                         break;

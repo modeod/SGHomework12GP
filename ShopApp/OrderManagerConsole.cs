@@ -2,6 +2,7 @@
 using ShopApp.Entities.OrderEntity;
 using ShopApp.Entities.OrderItemEntity;
 using ShopApp.Entities.ProductEntity;
+using ShopApp.Facade;
 using ShopApp.Interface;
 using ShopApp.Repositories;
 using ShopApp.Repositories.Interfaces;
@@ -13,12 +14,15 @@ namespace ShopApp
         protected readonly ICRUDOrders crudOrder;
         protected readonly IReadStorage readStorage;
         protected readonly IUserRepository userRepository;
+        private ConsoleHandler _consoleHandler;
 
-        public OrderManagerConsole(ICRUDOrders crudOrder, IReadStorage readStorage, IUserRepository userRepository)
+        public OrderManagerConsole(ICRUDOrders crudOrder, IReadStorage readStorage, IUserRepository userRepository,
+            ConsoleHandler consoleHandler)
         {
             this.crudOrder = crudOrder;
             this.readStorage = readStorage;
             this.userRepository = userRepository;
+            _consoleHandler = consoleHandler;
         }
 
         public async Task CreateOrder()
@@ -205,6 +209,7 @@ namespace ShopApp
                 case 5:
                     {
                         Console.WriteLine("Вихiд.");
+                        await _consoleHandler.ConfigureWorkWithSystem();
                         break;
                     }
                 default:

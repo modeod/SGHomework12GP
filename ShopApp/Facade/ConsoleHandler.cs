@@ -46,22 +46,23 @@ public class ConsoleHandler
                 await _storageManagerConsole.ShowMenu();
                 break;
             default:
-                throw new ArgumentException(nameof(role));
+                await ConfigureWorkWithSystem();
+                break;
         }
     }
 
     private async Task<UserConsole> InjectUserConsole()
     {
-        return new UserConsole(1, storage, orderRepository, proxyPay, null);
+        return new UserConsole(1, storage, orderRepository, proxyPay, null, this);
     }
     
     private async Task<OrderManagerConsole> InjectOrderManagerConsole()
     {
-        return new OrderManagerConsole(CRUDOrders, storage, userRepository);
+        return new OrderManagerConsole(CRUDOrders, storage, userRepository, this);
     }
     
     private async Task<StorageManagerConsole> InjectStorageManagerConsole()
     {
-        return new StorageManagerConsole(CRUDStorage, ProdFabric);
+        return new StorageManagerConsole(CRUDStorage, ProdFabric, this);
     }
 }

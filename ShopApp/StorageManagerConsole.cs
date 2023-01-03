@@ -5,6 +5,7 @@ using ShopApp.Entities.ProductEntity;
 using ShopApp.Interface;
 using ShopApp.Repositories.Interfaces;
 using System.Text;
+using ShopApp.Facade;
 
 namespace ShopApp
 {
@@ -12,11 +13,14 @@ namespace ShopApp
     {
         private ICRUDStorage storageCRUD;
         private IProxyProdFabric prodFabric;
+        private readonly ConsoleHandler _consoleHandler;
 
-        public StorageManagerConsole(ICRUDStorage storageCRUD, IProxyProdFabric prodFabric)
+        public StorageManagerConsole(ICRUDStorage storageCRUD, IProxyProdFabric prodFabric,
+            ConsoleHandler consoleHandler)
         {
             this.storageCRUD = storageCRUD;
             this.prodFabric = prodFabric;
+            _consoleHandler = consoleHandler;
         }
         public async Task ShowMenu()
         {
@@ -76,6 +80,7 @@ namespace ShopApp
                     case 6:
                         {
                             Console.WriteLine("Вихід.");
+                            await _consoleHandler.ConfigureWorkWithSystem();
                             break;
                         }
                     default:
