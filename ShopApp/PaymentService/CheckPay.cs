@@ -9,7 +9,7 @@ namespace ShopApp.PaymentService
 {
     public class CheckPay : IPayment
     {
-        public bool Pay(uint _amount)
+        public bool Pay(decimal _amount)
         {
             Console.WriteLine("Оплата готівкою");
             return true;
