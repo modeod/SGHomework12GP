@@ -1,8 +1,6 @@
-﻿using ShopApp.DTO;
-using ShopApp.DTO.Enums;
+﻿using ShopApp.DTO.Enums;
 using ShopApp.Entities.OrderEntity;
 using ShopApp.Entities.OrderItemEntity;
-using ShopApp.Entities.OrderStatusEntity;
 using ShopApp.Entities.ProductEntity;
 using ShopApp.Interface;
 using ShopApp.Repositories;
@@ -56,6 +54,7 @@ namespace ShopApp
             if (productsVendorCode == null || productsVendorCode.Length == 0)
             {
                 Console.WriteLine("Жоден продукт не вибрано");
+                return;
             }
             else
             {
@@ -107,7 +106,36 @@ namespace ShopApp
         }
         public async Task UpdateOrder()
         {
+            Order? order = null;
             
+            Console.WriteLine("Введiть код замовлення");
+            if (int.TryParse(Console.ReadLine(), out var indexProduct))
+            {
+                order = await crudOrder.GetById(indexProduct);
+            }
+
+            if (order == null)
+            {
+                Console.WriteLine("Замовлення не знайдено");
+                return;
+            }
+
+            Console.Write("Введiть новий опис: ");
+            order.Description = Console.ReadLine();
+
+            foreach (var item in order.OrderItems)
+            {
+                Console.WriteLine("Введiть нову к-ть товару");
+                Console.WriteLine($"{item.ProductVendorCode} {item.Product.Name} - {item.Amount}");
+
+                if (int.TryParse(Console.ReadLine(), out var newProductAmount))
+                {
+                    item.Amount = newProductAmount;
+                }
+            }
+
+            await crudOrder.UpdateOrder(order);
+            Console.WriteLine("Замовлення успiшно оновлено");
         }
 
         public async Task DeleteOrder()
@@ -115,10 +143,6 @@ namespace ShopApp
             
         }
 
-        public async Task FindOrderById()
-        {
-
-        }
 
         public async Task ShowMenu()
         {
@@ -126,8 +150,7 @@ namespace ShopApp
             Console.WriteLine("2 - Показати замовлення");
             Console.WriteLine("3 - Оновити замовлення");
             Console.WriteLine("4 - Видалити замовлення");
-            Console.WriteLine("5 - Знайти замовлення по ID");
-            Console.WriteLine("6 - Вихiд");
+            Console.WriteLine("5 - Вихiд");
 
             int menuCount;
             do
@@ -169,11 +192,6 @@ namespace ShopApp
                         break;
                     }
                 case 5:
-                    {
-                        await FindOrderById();
-                        break;
-                    }
-                case 6:
                     {
                         Console.WriteLine("Вихiд.");
                         break;
