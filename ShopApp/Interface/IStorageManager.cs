@@ -8,11 +8,11 @@ namespace ShopApp.Interface
 {
     public interface IStorageManager
     {
-        public void ShowMenu();
-        public void CreateProduct();
-        public void DeleteProduct();
-        public void ReadProduct();
-        public void UpdateProduct();
-        public void FindProductsById();
+        public  Task ShowMenu();
+        public  Task CreateProduct();
+        public  Task DeleteProduct();
+        public  Task ReadProduct();
+        public  Task UpdateProduct();
+        public  Task FindProductsById();
     }
 }
