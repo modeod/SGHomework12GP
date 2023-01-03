@@ -26,7 +26,7 @@ namespace ShopApp
         {
             var orderToCreate = new Order();
             User? user = null;
-            Console.Write("Введіть id користувача: ");
+            Console.Write("Введiть id користувача: ");
             if (Int32.TryParse(Console.ReadLine(), out var userId))
             {
                 user = await userRepository.GetById(userId);
