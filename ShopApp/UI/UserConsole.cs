@@ -19,10 +19,6 @@ namespace ShopApp.UI
         private int userId;
         public Order CurrentOrder { get; set; }
 
-        public UserConsole()
-        {
-
-        }
         public UserConsole(int userId,IReadStorage storage, IUserOrder orderService, IProxyPay payment, Order currentOrder)
         {
             this.storage = storage;
