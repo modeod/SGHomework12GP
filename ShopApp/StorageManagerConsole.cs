@@ -85,27 +85,13 @@ namespace ShopApp
             } while (menuCount!=6);
             
         }
- 
+        
         public async Task CreateProduct()
         {
             Console.WriteLine("Створення продукта");
             Type typeProduct = prodFabric.ChooseProductType();
             ProductDTO newProductDTO = prodFabric.CreateProduct();
-            Product generalProduct;
-            if (typeProduct.Name == typeof(NonFoodProductDTO).Name)
-            {
-                generalProduct = ((NonFoodProductDTO) newProductDTO).MapToProduct();
-            }
-            else if (typeProduct.Name == typeof(MeatDTO).Name)
-            {
-                generalProduct = ((MeatDTO)newProductDTO).MapToProduct();
-            }
-            else if (typeProduct.Name == typeof(FoodProductDTO).Name)
-            {
-                generalProduct = ((FoodProductDTO)newProductDTO).MapToProduct();
-            }
-            else 
-                throw new Exception("Не правильно створена фабрика");
+            Product generalProduct = DTOtoProduct(typeProduct, newProductDTO);
             
             try
             {
@@ -137,13 +123,18 @@ namespace ShopApp
             do
             {
                 Console.WriteLine("Введіть код продукта: ");
-                if (int.TryParse(Console.ReadLine(), out indexProduct))
+                if (!int.TryParse(Console.ReadLine(), out indexProduct))
                 {
-                    if (indexProduct < 0) return;
-                    break;
-                }
-                else
                     Console.WriteLine("Потрібно ввести хоть якесь число!");
+                }
+                if (indexProduct < 0) return;
+
+                if (await storageCRUD.FindProductsById(indexProduct) == null)
+                {
+                    Console.WriteLine("Продукта з таким індексом не існує");
+                    continue;
+                }
+                break;
             }
             while (true);
 
@@ -205,43 +196,29 @@ namespace ShopApp
         }
         public async Task UpdateProduct()
         {
-            Product generalProduct;
             Console.WriteLine("Щоб відмінити видалення введіть мінусове число");
             int indexProduct;
             do
             {
                 Console.WriteLine("Введіть код продукта: ");
-                if (int.TryParse(Console.ReadLine(), out indexProduct))
+                if (!int.TryParse(Console.ReadLine(), out indexProduct))
                 {
-                    if (indexProduct < 0) return;
-                    break;
+                    Console.WriteLine("Потрібно ввести хоть якесь число!");
                 }
-                else Console.WriteLine("Потрібно ввести хоть якесь число!");
+                if (indexProduct < 0) return;
 
                 if (await storageCRUD.FindProductsById(indexProduct) == null)
                 {
                     Console.WriteLine("Продукта з таким індексом не існує");
+                    continue;
                 }
+                break;
             }
             while (true);
 
             Type typeProduct = prodFabric.ChooseProductType();
             ProductDTO newProductDTO = prodFabric.CreateProduct();
-
-            if (typeProduct.Name == typeof(NonFoodProductDTO).Name)
-            {
-                generalProduct = ((NonFoodProductDTO)newProductDTO).MapToProduct();
-            }
-            else if (typeProduct.Name == typeof(MeatDTO).Name)
-            {
-                generalProduct = ((MeatDTO)newProductDTO).MapToProduct();
-            }
-            else if (typeProduct.Name == typeof(FoodProductDTO).Name)
-            {
-                generalProduct = ((FoodProductDTO)newProductDTO).MapToProduct();
-            }
-            else
-                throw new Exception("Не правильно створена фабрика");
+            Product generalProduct = DTOtoProduct(typeProduct, newProductDTO);
 
             generalProduct.VendorCode = indexProduct;
 
@@ -284,7 +261,6 @@ namespace ShopApp
                     Console.WriteLine("Потрібно ввести хоть якесь число!");
             }
             while (true);
-
             Product? findProduct = storageCRUD.FindProductsById(indexProduct).Result;
             if (findProduct == null)
             {
@@ -295,6 +271,7 @@ namespace ShopApp
                 Console.WriteLine(ToStringProduct(findProduct));
             }
         }
+
         private string ToStringProduct(Product product)
         {
             string result = "";
@@ -311,6 +288,23 @@ namespace ShopApp
             result += "Валюта: "+product.Currency + " | ";
             result += "Ціна: "+product.Price + " | ";
             return result;
+        }
+        private Product DTOtoProduct(Type typeProduct, ProductDTO productDTO)
+        {
+            if (typeProduct.Name == typeof(NonFoodProductDTO).Name)
+            {
+                return ((NonFoodProductDTO)productDTO).MapToProduct();
+            }
+            else if (typeProduct.Name == typeof(MeatDTO).Name)
+            {
+                return ((MeatDTO)productDTO).MapToProduct();
+            }
+            else if (typeProduct.Name == typeof(FoodProductDTO).Name)
+            {
+                return ((FoodProductDTO)productDTO).MapToProduct();
+            }
+            else
+                throw new Exception("Не правильно створена фабрика");
         }
     }
 }
