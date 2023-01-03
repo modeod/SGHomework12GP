@@ -30,6 +30,10 @@ namespace ShopApp.Entities.UserEntity
             builder
                 .Property(x => x.Email)
                 .IsRequired();
+            
+            builder
+                .Property(x => x.Password)
+                .IsRequired();
 
             builder
                 .HasMany(x => x.Orders)
