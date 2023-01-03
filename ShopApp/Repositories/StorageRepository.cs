@@ -11,7 +11,7 @@ namespace ShopApp.Repositories
 {
     public class StorageRepository : ICRUDStorage
     {
-        private ShopDbContext _dbContext;
+        private readonly ShopDbContext _dbContext;
         public StorageRepository(ShopDbContext context)
         {
             _dbContext = context;

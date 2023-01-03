@@ -10,7 +10,7 @@ namespace ShopApp.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private ShopDbContext _shopDbContext;
+        private readonly ShopDbContext _shopDbContext;
         public UserRepository(ShopDbContext context)
         {
             _shopDbContext = context;
