@@ -2,6 +2,7 @@
 using ShopApp.Entities.OrderEntity;
 using ShopApp.Entities.OrderItemEntity;
 using ShopApp.Entities.ProductEntity;
+using ShopApp.Entities.UserEntity;
 using ShopApp.Interface;
 using ShopApp.Repositories;
 using ShopApp.Repositories.Interfaces;
@@ -13,21 +14,29 @@ namespace ShopApp
         protected readonly ICRUDOrders crudOrder;
         protected readonly IReadStorage readStorage;
         protected readonly IUserRepository userRepository;
-        private int userId;
 
-        public OrderManagerConsole(ICRUDOrders crudOrder, IReadStorage readStorage, IUserRepository userRepository, int userId)
+        public OrderManagerConsole(ICRUDOrders crudOrder, IReadStorage readStorage, IUserRepository userRepository)
         {
             this.crudOrder = crudOrder;
             this.readStorage = readStorage;
             this.userRepository = userRepository;
-            this.userId = userId;
         }
 
         public async Task CreateOrder()
         {
             var orderToCreate = new Order();
-            var user = await userRepository.GetById(userId);
-            if (user == null)
+            User? user = null;
+            Console.Write("Введіть id користувача: ");
+            if (Int32.TryParse(Console.ReadLine(), out var userId))
+            {
+                user = await userRepository.GetById(userId);
+                if (user is null)
+                {
+                    Console.WriteLine("Користувача не знайдено");
+                    return;
+                }
+            }
+            else
             {
                 Console.WriteLine("Користувача не знайдено");
                 return;
@@ -108,7 +117,7 @@ namespace ShopApp
                 Console.WriteLine(ex.Message);
                 return;
             }
-            Console.WriteLine("Замовлення успішно додано");
+            Console.WriteLine("Замовлення успiшно додано");
         }
         public async Task ReadOrders()
         {
@@ -204,59 +213,63 @@ namespace ShopApp
 
         public async Task ShowMenu()
         {
-            Console.WriteLine("1 - Додати замовлення");
-            Console.WriteLine("2 - Показати всi замовлення");
-            Console.WriteLine("3 - Оновити замовлення");
-            Console.WriteLine("4 - Видалити замовлення");
-            Console.WriteLine("5 - Вихiд");
-
-            int menuCount;
-            do
+            while (true)
             {
-                Console.WriteLine("Введiть ваш вибiр: ");
-                if (!int.TryParse(Console.ReadLine(), out menuCount))
+                Console.WriteLine("1 - Додати замовлення");
+                Console.WriteLine("2 - Показати всi замовлення");
+                Console.WriteLine("3 - Оновити замовлення");
+                Console.WriteLine("4 - Видалити замовлення");
+                Console.WriteLine("5 - Вихiд");
+                int choose;
+                
+                try
                 {
-                    Console.WriteLine("Потрібно ввести хоть якесь число!");
-                    continue;
+                    choose = Convert.ToInt32(Console.ReadLine());
                 }
-                else
-                if (menuCount < 1 || menuCount > 6)
+                catch (Exception)
                 {
-                    Console.WriteLine("Введіть дані числа меню!");
+                    choose = 0;
                 }
-            }
-            while (menuCount < 1 || menuCount > 6);
 
-            switch (menuCount)
-            {
-                case 1:
+                switch (choose)
+                {
+                    case 1:
                     {
+                        Console.Clear();
                         await CreateOrder();
                         break;
                     }
-                case 2:
+                    case 2:
                     {
+                        Console.Clear();
                         await ReadOrders();
                         break;
                     }
-                case 3:
+                    case 3:
                     {
+                        Console.Clear();
                         await UpdateOrder();
                         break;
                     }
-                case 4:
+                    case 4:
                     {
+                        Console.Clear();
                         await DeleteOrder();
                         break;
                     }
-                case 5:
+                    case 5:
                     {
+                        Console.Clear();
                         Console.WriteLine("Вихiд.");
+                        return;
+                    }
+                    default:
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Введіть число зі списку.");
                         break;
                     }
-                default:
-                    throw
-                        new Exception("Помилка меню.");
+                }
             }
         }
 
