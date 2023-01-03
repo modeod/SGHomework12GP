@@ -109,9 +109,9 @@ namespace ShopApp
             Order? order = null;
             
             Console.WriteLine("Введiть код замовлення");
-            if (int.TryParse(Console.ReadLine(), out var indexProduct))
+            if (int.TryParse(Console.ReadLine(), out var indexOrder))
             {
-                order = await crudOrder.GetById(indexProduct);
+                order = await crudOrder.GetById(indexOrder);
             }
 
             if (order == null)
@@ -140,7 +140,18 @@ namespace ShopApp
 
         public async Task DeleteOrder()
         {
+            Console.WriteLine("Введiть код замовлення");
             
+            if (int.TryParse(Console.ReadLine(), out var indexOrder))
+            {
+                var deletedOrder = await crudOrder.DeleteOrder(indexOrder);
+            }
+            else
+            {
+                Console.WriteLine("Замовлення не знайдено");
+                return;
+            }
+            Console.WriteLine("Замовлення успішно видалено");
         }
 
 
