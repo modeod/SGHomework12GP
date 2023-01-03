@@ -23,54 +23,57 @@ namespace GroupProject.factory
 
         private MeatType GetMeatType()
         {
-            try
+            int res;
+            do
             {
-                uint res;
-                do
+                Console.WriteLine("Meat Type (0 - Pork, 1 - Lamb, 2 - Chicken): ");
+                try
                 {
-                    Console.WriteLine("Meat Type (0 - Pork, 1 - Lamb, 2 - Chicken): ");
-                    string input = Console.ReadLine();
-                    res = Convert.ToUInt32(input);
+                    res = Convert.ToInt32(Console.ReadLine());
                 }
-                while (res > 2 || res < 0);
-                return (MeatType)res;
+                catch (FormatException)
+                {
+                    Console.WriteLine("Incorrect formatting.");
+                    res = -1;
+                    continue;
+                }
+                catch (OverflowException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    res = -1;
+                    continue;
+                }
             }
-            catch (FormatException)
-            {
-                Console.WriteLine("Incorrect formatting.");
-                return GetMeatType();
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return GetMeatType();
-            }
+            while (res > 2 || res < 0);
+            return (MeatType)res;
         }
 
         private MeatSort GetMeatSort()
         {
-            try
+            int res;
+            do
             {
-                uint res;
-                do
+                Console.WriteLine("Meat Sort ( 0 - First, 1 - Second): ");
+                try
                 {
-                    Console.WriteLine("Meat Sort ( 0 - First, 1 - Second): ");
-                    string input = Console.ReadLine();
-                    res = Convert.ToUInt32(input);
+                    res = Convert.ToInt32(Console.ReadLine());
                 }
-                while (res > 1 || res < 0);
-                return (MeatSort)res;
+                catch (FormatException)
+                {
+                    Console.WriteLine("Incorrect formatting.");
+                    res = -1;
+                    continue;
+                }
+                catch (OverflowException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    res = -1;
+                    continue;
+                }
             }
-            catch (FormatException)
-            {
-                Console.WriteLine("Incorrect formatting.");
-                return GetMeatSort();
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return GetMeatSort();
-            }
+            while (res > 1 || res < 0);
+
+            return (MeatSort)res;
         }
     }
 }

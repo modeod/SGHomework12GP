@@ -34,124 +34,141 @@ namespace GroupProject.factory
 
         private decimal GetPrice()
         {
-            try
+            decimal res;
+            do
             {
-                decimal res;
-                do
+                Console.WriteLine("Enter product price: ");
+                try
                 {
-                    Console.WriteLine("Enter product price: ");
                     res = Convert.ToDecimal(Console.ReadLine());
                 }
-                while (res < 0);
-                return res;
+                catch (FormatException)
+                {
+                    Console.WriteLine("Incorrect formatting.");
+                    res = -1;
+                    continue;
+                }
+                catch (OverflowException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    res = -1;
+                    continue;
+                }
             }
-            catch (FormatException)
-            {
-                Console.WriteLine("Incorrect formatting.");
-                return GetPrice();
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return GetPrice();
-            }
+            while (res < 0);
+            return res;
         }
 
         private double GetWeight()
         {
-            try
+            double res;
+            do
             {
-                double res;
-                do
+                Console.WriteLine("Enter product weight: ");
+                try
                 {
-                    Console.WriteLine("Enter product weight: ");
                     res = Convert.ToDouble(Console.ReadLine());
                 }
-                while (res < 0);
-                return res;
+                catch (FormatException)
+                {
+                    Console.WriteLine("Incorrect formatting.");
+                    res = -1;
+                    continue;
+                }
+                catch (OverflowException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    res = -1;
+                    continue;
+                }
             }
-            catch (FormatException)
-            {
-                Console.WriteLine("Incorrect formatting.");
-                return GetWeight();
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return GetWeight();
-            }
+            while (res < 0);
+
+            return res;
         }
 
         private uint GetProductAmount()
         {
-            try
+            int res;
+            do
             {
                 Console.WriteLine("Enter product amount: ");
-                uint res = Convert.ToUInt32(Console.ReadLine());
-                return res;
+                try
+                {
+                    res = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Incorrect formatting.");
+                    res = -1;
+                    continue;
+                }
+                catch (OverflowException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    res = -1;
+                    continue;
+                }
             }
-            catch (FormatException)
-            {
-                Console.WriteLine("Incorrect formatting.");
-                return GetProductAmount();
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return GetProductAmount();
-            }
+            while (res < 0);
+
+            return Convert.ToUInt32(res);
         }
 
         private Weight GetWeightUnits()
         {
-            try
+            int res;
+            do
             {
-                uint res;
-                do
+                Console.WriteLine("Weight unit ( 0 - Gramm, 1 - Kiloramm, 2 - Liter, 3 - Milliliter): ");
+                try
                 {
-                    Console.WriteLine("Weight unit ( 0 - Gramm, 1 - Kiloramm, 2 - Liter, 3 - Milliliter): ");
-                    string input = Console.ReadLine();
-                    res = Convert.ToUInt32(input);
+                    res = Convert.ToInt32(Console.ReadLine());
                 }
-                while (res > 3 || res < 0);
-                return (Weight)res;
+                catch (FormatException)
+                {
+                    Console.WriteLine("Incorrect formatting.");
+                    res = -1;
+                    continue;
+                }
+                catch (OverflowException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    res = -1;
+                    continue;
+                }
             }
-            catch (FormatException)
-            {
-                Console.WriteLine("Incorrect formatting.");
-                return GetWeightUnits();
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return GetWeightUnits();
-            }
+            while (res > 3 || res < 0);
+
+            return (Weight)res;
         }
 
         private Currency GetCurrency()
         {
-            try
+            int res;
+            do
             {
-                uint res;
-                do
+                Console.WriteLine("Currency ( 0 - UAH, 1 - USD, 2 - EUR): ");
+                try
                 {
-                    Console.WriteLine("Currency ( 0 - UAH, 1 - USD, 2 - EUR): ");
-                    string input = Console.ReadLine();
-                    res = Convert.ToUInt32(input);
+                    res = Convert.ToInt32(Console.ReadLine());
                 }
-                while (res > 2 || res < 0);
-                return (Currency)res;
+                catch (FormatException)
+                {
+                    Console.WriteLine("Incorrect formatting.");
+                    res = -1;
+                    continue;
+                }
+                catch (OverflowException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    res = -1;
+                    continue;
+                }
             }
-            catch (FormatException)
-            {
-                Console.WriteLine("Incorrect formatting.");
-                return GetCurrency();
-            }
-            catch (OverflowException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return GetCurrency();
-            }
+            while (res > 2 || res < 0);
+
+            return (Currency)res;
         }
     }
 }

@@ -22,23 +22,15 @@ namespace GroupProject.factory
 
         private DateTime GetExpiryDate()
         {
-            try
+            DateTime res;
+            do
             {
-                DateTime res;
-                do
-                {
-                    Console.WriteLine("Enter expiry date (Format: DD.MM.YYYY HH:MM:SS in 24-hour clock time): ");
-                    string input = Console.ReadLine();
-                    DateTime.TryParse(input, out res);
-                }
-                while (res <= DateTime.Now.Date);
-                return res;
+                Console.WriteLine("Enter expiry date (Format: DD.MM.YYYY HH:MM:SS in 24-hour clock time): ");
+                string input = Console.ReadLine();
+                if (!DateTime.TryParse(input, out res)) { continue; }
             }
-            catch (FormatException)
-            {
-                Console.WriteLine("Incorrect formatting.");
-                return GetExpiryDate();
-            }
+            while (res <= DateTime.Now.Date);
+            return res;
         }
     }
 }
