@@ -8,9 +8,9 @@ namespace GroupProject.DTO.Enums
 {
     public enum ProdType
     {
-        Food = 1,
-        Meat = 2,
-        NonFoodProduct = 3,
-        Product = 4
+        Food = 0,
+        Meat = 1,
+        NonFoodProduct = 2,
+        Product = 3
     }
 }
