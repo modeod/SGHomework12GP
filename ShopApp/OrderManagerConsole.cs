@@ -13,18 +13,20 @@ namespace ShopApp
         protected readonly ICRUDOrders crudOrder;
         protected readonly IReadStorage readStorage;
         protected readonly IUserRepository userRepository;
+        private int userId;
 
-        public OrderManagerConsole(ICRUDOrders crudOrder, IReadStorage readStorage, IUserRepository userRepository)
+        public OrderManagerConsole(ICRUDOrders crudOrder, IReadStorage readStorage, IUserRepository userRepository, int userId)
         {
             this.crudOrder = crudOrder;
             this.readStorage = readStorage;
             this.userRepository = userRepository;
+            this.userId = userId;
         }
 
         public async Task CreateOrder()
         {
             var orderToCreate = new Order();
-            var user = await userRepository.GetById(4);
+            var user = await userRepository.GetById(userId);
             if (user == null)
             {
                 Console.WriteLine("Користувача не знайдено");
@@ -92,7 +94,20 @@ namespace ShopApp
             orderToCreate.StatusId = (int)OrderStatuses.Pending;
             orderToCreate.OrderedAt = DateTime.Now;
 
-            var createdOrder = await crudOrder.CreateOrder(orderToCreate);
+            try
+            {
+                var createdOrder = await crudOrder.CreateOrder(orderToCreate);
+            }
+            catch(NullReferenceException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
             Console.WriteLine("Замовлення успішно додано");
         }
         public async Task ReadOrders()
@@ -132,9 +147,28 @@ namespace ShopApp
                 {
                     item.Amount = newProductAmount;
                 }
+                else
+                {
+                    Console.WriteLine("Некоректне значення к-тi товару");
+                    Console.WriteLine("Замовлення не оновлено");
+                    return;
+                }
             }
 
-            await crudOrder.UpdateOrder(order);
+            try
+            {
+                await crudOrder.UpdateOrder(order);
+            }
+            catch(ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
+            catch(NullReferenceException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
             Console.WriteLine("Замовлення успiшно оновлено");
         }
 
@@ -144,21 +178,34 @@ namespace ShopApp
 
             if (int.TryParse(Console.ReadLine(), out var indexOrder))
             {
-                var deletedOrder = await crudOrder.DeleteOrder(indexOrder);
+                try
+                {
+                    var deletedOrder = await crudOrder.DeleteOrder(indexOrder);
+                }
+                catch(ArgumentException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
             }
             else
             {
                 Console.WriteLine("Замовлення не знайдено");
                 return;
             }
-            Console.WriteLine("Замовлення успішно видалено");
+            Console.WriteLine("Замовлення успiшно видалено");
         }
 
 
         public async Task ShowMenu()
         {
             Console.WriteLine("1 - Додати замовлення");
-            Console.WriteLine("2 - Показати замовлення");
+            Console.WriteLine("2 - Показати всi замовлення");
             Console.WriteLine("3 - Оновити замовлення");
             Console.WriteLine("4 - Видалити замовлення");
             Console.WriteLine("5 - Вихiд");
