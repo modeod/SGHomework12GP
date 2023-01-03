@@ -19,6 +19,10 @@ namespace ShopApp.UI
         private int userId;
         public Order CurrentOrder { get; set; }
 
+        public UserConsole()
+        {
+
+        }
         public UserConsole(int userId,IReadStorage storage, IUserOrder orderService, IProxyPay payment, Order currentOrder)
         {
             this.storage = storage;
@@ -60,8 +64,12 @@ namespace ShopApp.UI
                     case 2:
                         Console.Clear();
                         Console.WriteLine("Введiть номер продукта для пошуку:");
-                        int productNumber=Convert.ToInt32(Console.ReadLine());
-                        FindProductsById(productNumber);
+                        if (Int32.TryParse(Console.ReadLine(), out int productNumber))
+                        {
+                            FindProductsById(productNumber);
+                            break;
+                        }
+                        Console.WriteLine("Некорректний номер продукту.");
                         break;
                     case 3:
                         Console.Clear();
@@ -70,10 +78,16 @@ namespace ShopApp.UI
                     case 4:
                         Console.Clear();
                         Console.WriteLine("Введiть номер продукту, який бажаєте додати до замовлення:");
-                        productNumber=Convert.ToInt32(Console.ReadLine());
-                        Console.WriteLine("Введiть кiлькiсть продуктiв, який бажаєте додати до замовлення:");
-                        int amount=Convert.ToInt32(Console.ReadLine());
-                        UpdateCurrentOrder(FindProductsById(productNumber),amount);
+                        if(Int32.TryParse(Console.ReadLine(), out productNumber))
+                        {
+                            Console.WriteLine("Введiть кiлькiсть продуктiв, який бажаєте додати до замовлення:");
+                            if(Int32.TryParse(Console.ReadLine(),out int amount))
+                            {
+                                UpdateCurrentOrder(FindProductsById(productNumber), amount);
+                                break;
+                            }
+                        }
+                        Console.WriteLine("Некорректний номер продукту або його кiлькiсть");
                         break;
                     case 5:
                         Console.Clear();
@@ -97,11 +111,11 @@ namespace ShopApp.UI
             }
 
         }
-        public void GetMyOrders()
+        async public void GetMyOrders()
         {
             try
             {
-                var myOrders = orderService.GetAll().Result.Where(x => x.UserId == userId);
+                var myOrders =(await orderService.GetAll()).Where(x => x.UserId == userId);
                 foreach (var item in myOrders)
                 {
                     decimal totalPrice = 0;
@@ -121,11 +135,11 @@ namespace ShopApp.UI
             }
         }
 
-        public void ShowListOfProducts()
+        async public void ShowListOfProducts()
         {
             try
             {
-                var products = storage.ReadProducts().Result;
+             var products = await storage.ReadProducts();
                 foreach (var product in products)
                 {
                     ShowProduct(product);
