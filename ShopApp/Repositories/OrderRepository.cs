@@ -59,7 +59,11 @@ namespace ShopApp.Repositories
         }
         public async Task<Order?> GetById(int id)
         {
-            return await _dbContext.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
+            return await _dbContext.Orders.AsNoTracking()
+                .Where(o => o.Id == id)
+                .Include(x => x.OrderItems)
+                .ThenInclude(x => x.Product)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Order> UpdateOrder(Order order)
