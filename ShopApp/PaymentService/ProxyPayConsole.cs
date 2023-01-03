@@ -9,14 +9,10 @@ namespace ShopApp.PaymentService
 {
     public class ProxyPayConsole : IProxyPay
     {
-        IPayment payment;
+        IPayment? payment;
         public ProxyPayConsole()
         {
             payment = null;
-        }
-        public ProxyPayConsole(IPayment payment)
-        {
-            this.payment = payment;
         }
 
         public IPayment ChoosePaymentSystem()
@@ -57,7 +53,7 @@ namespace ShopApp.PaymentService
                 new Exception("Помилка вибору оплати.");
         }
 
-        public bool Pay(uint _amount)
+        public bool Pay(decimal _amount)
         {
             payment = ChoosePaymentSystem();
             return payment.Pay(_amount);

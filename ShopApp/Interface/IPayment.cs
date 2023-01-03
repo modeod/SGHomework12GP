@@ -8,6 +8,6 @@ namespace ShopApp.Interface
 {
     public interface IPayment
     {
-        public bool Pay(uint _amount);
+        public bool Pay(decimal amount);
     }
 }
