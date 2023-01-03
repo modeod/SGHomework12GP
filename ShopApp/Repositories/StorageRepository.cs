@@ -36,7 +36,7 @@ namespace ShopApp.Repositories
 
         public async Task<Product> DeleteProduct(int vendorCode)
         {
-            var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.VendorCode == vendorCode);
+            var product = await _dbContext.Products.AsNoTracking().FirstOrDefaultAsync(p => p.VendorCode == vendorCode);
             if (product == null)
             {
                 throw new ArgumentException("Wrong id");
@@ -55,12 +55,12 @@ namespace ShopApp.Repositories
 
         public async Task<Product?> FindProductsById(int id)
         {
-            return await _dbContext.Products.FindAsync(id);
+            return await _dbContext.Products.AsNoTracking().FirstOrDefaultAsync(prod => prod.VendorCode == id);
         }
 
         public async Task<List<Product>> ReadProducts()
         {
-            return await _dbContext.Products.ToListAsync();
+            return await _dbContext.Products.AsNoTracking().ToListAsync();
         }
 
         public async Task<Product> UpdateProduct(Product product)
@@ -71,6 +71,7 @@ namespace ShopApp.Repositories
             }
             try
             {
+                _dbContext.ChangeTracker.Clear();
                 _dbContext.Entry(product).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
                 return _dbContext.Products.First(p => p.VendorCode == p.VendorCode);

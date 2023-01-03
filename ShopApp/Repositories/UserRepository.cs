@@ -35,7 +35,7 @@ namespace ShopApp.Repositories
 
         public async Task<User> Delete(int id)
         {
-            var user = await _shopDbContext.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await _shopDbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
             if (user == null)
             {
                 throw new ArgumentException("Wrong id");
@@ -54,12 +54,12 @@ namespace ShopApp.Repositories
 
         public async Task<List<User>> GetAll()
         {
-            return await _shopDbContext.Users.ToListAsync();
+            return await _shopDbContext.Users.AsNoTracking().ToListAsync();
         }
 
         public async Task<User?> GetById(int id)
         {
-            return await _shopDbContext.Users.FindAsync(id);
+            return await _shopDbContext.Users.AsNoTracking().FirstOrDefaultAsync(user => user.Id == id);
         }
 
         public async Task<User> Update(User user)
@@ -70,6 +70,7 @@ namespace ShopApp.Repositories
             }
             try
             {
+                _shopDbContext.ChangeTracker.Clear();
                 _shopDbContext.Entry(user).State = EntityState.Modified;
                 await _shopDbContext.SaveChangesAsync();
                 return _shopDbContext.Users.First(u => u.Id == user.Id);

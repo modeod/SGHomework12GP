@@ -26,7 +26,7 @@ namespace ShopApp.Repositories
             {
                 await _dbContext.Orders.AddAsync(order);
                 await _dbContext.SaveChangesAsync();
-                return await _dbContext.Orders.FirstAsync(o => o.Id == order.Id);
+                return await _dbContext.Orders.AsNoTracking().FirstAsync(o => o.Id == order.Id);
             }
             catch (DbUpdateException)
             {
@@ -36,7 +36,7 @@ namespace ShopApp.Repositories
 
         public async Task<Order> DeleteOrder(int id)
         {
-            var order = await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            var order = await _dbContext.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
             if (order == null)
             {
                 throw new ArgumentException("Wrong id");
@@ -55,11 +55,11 @@ namespace ShopApp.Repositories
 
         public async Task<List<Order>> GetAll()
         {
-            return await _dbContext.Orders.ToListAsync();
+            return await _dbContext.Orders.AsNoTracking().ToListAsync();
         }
         public async Task<Order?> GetById(int id)
         {
-            return await _dbContext.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            return await _dbContext.Orders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<Order> UpdateOrder(Order order)
@@ -70,6 +70,7 @@ namespace ShopApp.Repositories
             }
             try
             {
+                _dbContext.ChangeTracker.Clear();
                 _dbContext.Entry(order).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
                 return await _dbContext.Orders.FirstAsync(o => o.Id == order.Id);
