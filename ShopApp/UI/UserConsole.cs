@@ -24,7 +24,7 @@ namespace ShopApp.UI
             CurrentOrder = currentOrder;
             this.userId = userId;
         }
-        async public void ShowMenuAsync()
+        async public Task ShowMenuAsync()
         {
             Console.BackgroundColor = ConsoleColor.Green;
             Console.WriteLine(">>> Вiтаємо у нашому магазинi та бажаємо приємних покупок! <<<");
@@ -52,21 +52,21 @@ namespace ShopApp.UI
                 {
                     case 1:
                         Console.Clear();
-                        ShowListOfProducts();
+                        await ShowListOfProducts();
                         break;
                     case 2:
                         Console.Clear();
                         Console.WriteLine("Введiть номер продукта для пошуку:");
                         if (Int32.TryParse(Console.ReadLine(), out int productNumber))
                         {
-                            FindProductsById(productNumber);
+                            await FindProductsById(productNumber);
                             break;
                         }
                         Console.WriteLine("Некорректний номер продукту.");
                         break;
                     case 3:
                         Console.Clear();
-                        GetMyOrders();
+                        await GetMyOrders();
                         break;
                     case 4:
                         Console.Clear();
@@ -104,7 +104,7 @@ namespace ShopApp.UI
             }
 
         }
-        async public void GetMyOrders()
+        async public Task GetMyOrders()
         {
             try
             {
@@ -128,7 +128,7 @@ namespace ShopApp.UI
             }
         }
 
-        async public void ShowListOfProducts()
+        async public Task ShowListOfProducts()
         {
             try
             {
@@ -195,7 +195,7 @@ namespace ShopApp.UI
 
         }
 
-        async public void ApplyOrder()
+        async public Task ApplyOrder()
         {
             if (CurrentOrder is null || CurrentOrder.OrderItems.Count == 0)
             {
