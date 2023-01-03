@@ -12,8 +12,10 @@ namespace ShopApp.Repositories
     {
         Task<List<User>> GetAll();
         Task<User?> GetById(int id);
+        Task<User?> GetByCredentials(string email, string password);
         Task<User> AddUser(User user);
         Task<User> Update(User user);
         Task<User> Delete(int id);
+        Task<bool> DoesUserExist(string email, string password);
     }
 }

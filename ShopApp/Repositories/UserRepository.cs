@@ -10,11 +10,20 @@ namespace ShopApp.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private ShopDbContext _shopDbContext;
+        private readonly ShopDbContext _shopDbContext;
+        
         public UserRepository(ShopDbContext context)
         {
             _shopDbContext = context;
         }
+
+        public async Task<User?> GetByCredentials(string email, string password)
+        {
+            return await _shopDbContext.Users
+                .FirstOrDefaultAsync(x => x.Email == email 
+                                          && string.Equals(x.Password, password));
+        }
+
         public async Task<User> AddUser(User user)
         {
             if (user is null)
@@ -50,6 +59,14 @@ namespace ShopApp.Repositories
             {
                 throw new Exception("Couldn`t delete user");
             }
+        }
+
+        public async Task<bool> DoesUserExist(string email, string password)
+        {
+            return await _shopDbContext.Users
+                .AnyAsync(x => 
+                    x.Email == email 
+                    && string.Equals(x.Password, password));
         }
 
         public async Task<List<User>> GetAll()

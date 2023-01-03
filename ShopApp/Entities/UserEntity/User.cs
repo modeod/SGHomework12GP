@@ -12,6 +12,7 @@ namespace ShopApp.Entities.UserEntity
         public string Surname { get; set; } = null!;
         public string? Phone { get; set; }
         public string Email { get; set; } = null!;
+        public string Password { get; set; } = null!;
 
         public int AddressId { get; set; }
         public Address Address { get; set; } = null!;
