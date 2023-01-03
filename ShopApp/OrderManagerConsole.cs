@@ -98,12 +98,12 @@ namespace ShopApp
         }
         public async Task ReadOrders()
         {
-            //var orders = await crudOrder.GetAll();
+            var orders = await crudOrder.GetAll();
 
-            //foreach (var item in orders)
-            //{
-            //    Console.WriteLine(item.);
-            //}
+            foreach (var item in orders)
+            {
+                Console.WriteLine(ToStringOrder(item));
+            }
         }
         public async Task UpdateOrder()
         {
@@ -199,6 +199,17 @@ namespace ShopApp
             result += product.MeatType != null ? product.MeatType.ToString() + " | " : "";
             result += product.ExpiryDate != null ? product.ExpiryDate.ToString() + " | " : "";
             result += product.Currency + " | ";
+            return result;
+        }
+        private string ToStringOrder(Order order)
+        {
+            string result = "";
+            result += order.Id + " | ";
+            result += order.Description != null ? order.Description + " | " : "";
+            result += order.AddressId + " | ";
+            result += order.StatusId + " | ";
+            result += order.UserId + " | ";
+
             return result;
         }
     }

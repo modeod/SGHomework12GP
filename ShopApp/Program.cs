@@ -15,4 +15,4 @@ IOrderManager orderManagerConsole = new OrderManagerConsole(crudOrders, readStor
 
 await orderManagerConsole.ShowMenu();
 
-Console.WriteLine("ss");
+//Console.WriteLine("ss");
